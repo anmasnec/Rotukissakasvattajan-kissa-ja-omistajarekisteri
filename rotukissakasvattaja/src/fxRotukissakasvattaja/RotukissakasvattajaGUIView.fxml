@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import fi.jyu.mit.fxgui.ComboBoxChooser?>
+<?import fi.jyu.mit.fxgui.ListChooser?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="667.0" prefWidth="1065.0" xmlns="http://javafx.com/javafx/13.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRotukissakasvattaja.RotukissakasvattajaGUIController">
+   <bottom>
+      <HBox prefHeight="0.0" prefWidth="1097.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
+         <children>
+            <Button alignment="CENTER" text="Lisää uusi _kissa">
+               <tooltip>
+                  <Tooltip contentDisplay="CENTER" text="Lisää uusi kissa" />
+               </tooltip></Button>
+            <Button text="Lisää uusi _omistaja">
+               <tooltip>
+                  <Tooltip text="Lisää uusi omistaja" />
+               </tooltip></Button>
+            <Button mnemonicParsing="false" text="Tallenna">
+               <tooltip>
+                  <Tooltip text="Tallenna" />
+               </tooltip></Button>
+         </children>
+      </HBox>
+   </bottom>
+   <top>
+      <MenuBar prefWidth="813.0" BorderPane.alignment="CENTER">
+        <menus>
+          <Menu text="_Tiedosto">
+            <items>
+                  <MenuItem mnemonicParsing="false" text="Tallenna">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Avaa..." />
+                  <MenuItem mnemonicParsing="false" text="Tulosta..." />
+              <MenuItem mnemonicParsing="false" text="Lopeta">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+            </items>
+          </Menu>
+          <Menu text="_Muokkaa">
+            <items>
+              <MenuItem text="Lisää uusi _kissa">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem text="Lisää uusi _omistaja">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Apu">
+            <items>
+              <MenuItem text="_Apua" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <left>
+      <BorderPane prefHeight="641.0" prefWidth="171.0" BorderPane.alignment="CENTER">
+         <center>
+            <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="138.0" prefWidth="169.0">
+                     <children>
+                        <Pane prefHeight="129.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="298.0" prefWidth="170.0">
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="18.0" prefWidth="161.0" text="Hakuehto" />
+                                    <TextField prefHeight="31.0" prefWidth="168.0" />
+                                    <ComboBoxChooser prefHeight="25.0" prefWidth="169.0" rivit="Kissan nimi&#10;Rotu&#10;EMS-koodi&#10;Väri&#10;Rekisterinumero&#10;Sukupuoli&#10;Kissan syntymäaika&#10;Emon nimi&#10;Emon rekisterinumero&#10;Isän nimi&#10;Isän rekisterinumero&#10;Myyntipäivä&#10;Viimeisin rokotus&#10;Seuraava rokotus&#10;Omistajan nimi&#10;Katuosoite&#10;Postinumero&#10;Paikkakunta&#10;Puhelinnumero&#10;Omistajan syntymäaika&#10;&#10;&#10;" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </Pane>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="431.0" prefWidth="169.0">
+                     <children>
+                        <Pane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ListChooser layoutX="-1.0" layoutY="22.0" prefHeight="272.0" prefWidth="170.0" rivit="Kissakaveri Sadepilvi&#10;Kissakaveri Saniainen&#10;Kissakaveri Sateenkaari&#10;Kissakaveri April&#10;Kissakaveri Peter Pan&#10;Kissakaveri Poutapilvi&#10;Kissakaveri Selma&#10;Kissakaveri Urho&#10;Sade Pilvinen&#10;Kukka Metsälä&#10;Kari Luminen&#10;Lilja Lehtinen&#10;Pena Kissala" />
+                              <Label alignment="CENTER" prefHeight="17.0" prefWidth="169.0" text="Kissa/omistaja" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+         </center>
+      </BorderPane>
+   </left>
+   <center>
+      <ScrollPane fitToWidth="true" prefHeight="554.0" prefWidth="837.0" BorderPane.alignment="CENTER">
+         <content>
+            <SplitPane dividerPositions="0.497289972899729" prefHeight="525.0" prefWidth="740.0">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="624.0" prefWidth="489.0">
+                     <children>
+                        <Pane layoutX="34.0" layoutY="50.0" prefHeight="459.0" prefWidth="321.0">
+                           <children>
+                              <GridPane layoutY="-1.0" prefHeight="461.0" prefWidth="343.0">
+                                <columnConstraints>
+                                  <ColumnConstraints />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.0" minWidth="10.0" prefWidth="121.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="237.0" minWidth="10.0" prefWidth="222.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="Rotu" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="EMS-koodi" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label text="Kissan nimi" GridPane.columnIndex="1" />
+                                    <Label text="Väri" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label text="Rekisterinumero" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <Label text="Sukupuoli" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <Label text="Kissan syntymäaika" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                    <Label text="Emon nimi" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                    <Label text="Emon rekisterinumero" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                    <Label text="Isän nimi" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                                    <Label text="Myyntipäivä" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                                    <Label text="Isän rekisterinumero" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                                    <Label text="Viimeisin rokotus" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+                                    <Label text="Seuraava rokotus" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                                    <Label text="Lisätiedot" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+                                    <TextField GridPane.columnIndex="2" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="11" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="12" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="13" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="14" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </Pane>
+                        <Label alignment="CENTER" layoutX="30.0" prefHeight="17.0" prefWidth="329.0" text="Kissan tiedot">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="462.0" prefWidth="324.0">
+                     <children>
+                        <Pane layoutY="44.0" prefHeight="319.0" prefWidth="406.0">
+                           <children>
+                              <GridPane layoutX="18.0" layoutY="6.0" prefHeight="228.0" prefWidth="346.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="157.0" minWidth="10.0" prefWidth="124.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="200.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="Omistajan nimi" />
+                                    <Label text="Katuosoite" GridPane.rowIndex="1" />
+                                    <Label text="Postinumero" GridPane.rowIndex="2" />
+                                    <Label text="Paikkakunta" GridPane.rowIndex="3" />
+                                    <Label text="Puhelinnumero" GridPane.rowIndex="4" />
+                                    <Label text="Omistajan syntymäaika" GridPane.rowIndex="5" />
+                                    <Label text="Lisätiedot" GridPane.rowIndex="6" />
+                                    <TextField prefHeight="25.0" prefWidth="205.0" GridPane.columnIndex="1" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </Pane>
+                        <Label alignment="CENTER" layoutX="12.0" prefHeight="17.0" prefWidth="358.0" text="Kissan omistajan tiedot">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="36.0" layoutY="376.0" prefHeight="22.0" prefWidth="284.0" text="Huomautukset" />
+                        <TextArea layoutX="34.0" layoutY="400.0" prefHeight="113.0" prefWidth="316.0" />
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+         </content>
+      </ScrollPane>
+   </center>
+   <right>
+      <BorderPane prefHeight="528.0" prefWidth="57.0" BorderPane.alignment="CENTER" />
+   </right>
+</BorderPane>
