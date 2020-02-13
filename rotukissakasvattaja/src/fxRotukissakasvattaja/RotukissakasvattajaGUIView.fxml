@@ -24,25 +24,31 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="667.0" prefWidth="1065.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRotukissakasvattaja.RotukissakasvattajaGUIController">
+<BorderPane prefHeight="667.0" prefWidth="1065.0" xmlns="http://javafx.com/javafx/13.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRotukissakasvattaja.RotukissakasvattajaGUIController">
    <bottom>
-      <HBox prefHeight="0.0" prefWidth="1097.0" spacing="10.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="100.0" prefWidth="1045.0" spacing="10.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </BorderPane.margin>
          <children>
-            <Button alignment="CENTER" text="Lisää uusi _kissa">
+            <Button alignment="CENTER" onAction="#handleLisaaUusiKissa" text="Lisää uusi _kissa" HBox.hgrow="ALWAYS">
                <tooltip>
                   <Tooltip contentDisplay="CENTER" text="Lisää uusi kissa" />
                </tooltip></Button>
-            <Button text="Lisää uusi _omistaja">
+            <Button onAction="#handleLisaaUusiOmistaja" text="Lisää uusi _omistaja">
                <tooltip>
                   <Tooltip text="Lisää uusi omistaja" />
                </tooltip></Button>
-            <Button mnemonicParsing="false" text="Tallenna">
+            <Button mnemonicParsing="false" onAction="#handleTallenna" prefWidth="86.0" text="Tallenna">
                <tooltip>
                   <Tooltip text="Tallenna" />
                </tooltip></Button>
+            <HBox alignment="TOP_RIGHT" prefHeight="79.0" prefWidth="543.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#handlePoistaKissa" text="Poista kissa" />
+               </children>
+            </HBox>
+            <Button mnemonicParsing="false" onAction="#handlePoistaOmistaja" prefHeight="25.0" prefWidth="135.0" text="Poista omistaja" />
          </children>
       </HBox>
    </bottom>
@@ -51,13 +57,13 @@
         <menus>
           <Menu text="_Tiedosto">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Tallenna">
+                  <MenuItem mnemonicParsing="false" onAction="#handleTallenna" text="Tallenna">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
-                  <MenuItem mnemonicParsing="false" text="Tulosta..." />
-              <MenuItem mnemonicParsing="false" text="Lopeta">
+                  <MenuItem mnemonicParsing="false" onAction="#handleTulosta" text="Tulosta..." />
+              <MenuItem mnemonicParsing="false" onAction="#handleLopeta" text="Lopeta">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
@@ -65,17 +71,19 @@
           </Menu>
           <Menu text="_Muokkaa">
             <items>
-              <MenuItem text="Lisää uusi _kissa">
+              <MenuItem onAction="#handleLisaaUusiKissa" text="Lisää uusi _kissa">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-                  <MenuItem text="Lisää uusi _omistaja">
+                  <MenuItem onAction="#handleLisaaUusiOmistaja" text="Lisää uusi _omistaja">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#handleMuokkaaKissaa" text="Muokkaa kissaa" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleMuokkaaOmistajaa" text="Muokkaa omistajaa" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Apu">
+          <Menu mnemonicParsing="false" onAction="#handleApua" text="Apu">
             <items>
               <MenuItem text="_Apua" />
             </items>
@@ -95,8 +103,8 @@
                               <VBox prefHeight="298.0" prefWidth="170.0">
                                  <children>
                                     <Label alignment="CENTER" prefHeight="18.0" prefWidth="161.0" text="Hakuehto" />
-                                    <TextField prefHeight="31.0" prefWidth="168.0" />
-                                    <ComboBoxChooser prefHeight="25.0" prefWidth="169.0" rivit="Kissan nimi&#10;Rotu&#10;EMS-koodi&#10;Väri&#10;Rekisterinumero&#10;Sukupuoli&#10;Kissan syntymäaika&#10;Emon nimi&#10;Emon rekisterinumero&#10;Isän nimi&#10;Isän rekisterinumero&#10;Myyntipäivä&#10;Viimeisin rokotus&#10;Seuraava rokotus&#10;Omistajan nimi&#10;Katuosoite&#10;Postinumero&#10;Paikkakunta&#10;Puhelinnumero&#10;Omistajan syntymäaika&#10;&#10;&#10;" />
+                                    <TextField fx:id="hakuehto" onKeyReleased="#handleHakuehto" prefHeight="31.0" prefWidth="168.0" />
+                                    <ComboBoxChooser fx:id="cbKentat" onAction="#handleHakuehto" prefHeight="25.0" prefWidth="169.0" rivit="Kissan nimi&#10;Rotu&#10;EMS-koodi&#10;Väri&#10;Rekisterinumero&#10;Sukupuoli&#10;Kissan syntymäaika&#10;Emon nimi&#10;Emon rekisterinumero&#10;Isän nimi&#10;Isän rekisterinumero&#10;Myyntipäivä&#10;Viimeisin rokotus&#10;Seuraava rokotus&#10;Omistajan nimi&#10;Katuosoite&#10;Postinumero&#10;Paikkakunta&#10;Puhelinnumero&#10;Omistajan syntymäaika&#10;&#10;&#10;" />
                                  </children>
                               </VBox>
                            </children>
@@ -119,11 +127,11 @@
       </BorderPane>
    </left>
    <center>
-      <ScrollPane fitToWidth="true" prefHeight="554.0" prefWidth="837.0" BorderPane.alignment="CENTER">
+      <ScrollPane fitToWidth="true" prefHeight="551.0" prefWidth="837.0" BorderPane.alignment="CENTER">
          <content>
-            <SplitPane dividerPositions="0.497289972899729" prefHeight="525.0" prefWidth="740.0">
+            <SplitPane dividerPositions="0.497289972899729" prefHeight="608.0" prefWidth="822.0">
               <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="624.0" prefWidth="489.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="593.0" prefWidth="405.0">
                      <children>
                         <Pane layoutX="34.0" layoutY="50.0" prefHeight="459.0" prefWidth="321.0">
                            <children>

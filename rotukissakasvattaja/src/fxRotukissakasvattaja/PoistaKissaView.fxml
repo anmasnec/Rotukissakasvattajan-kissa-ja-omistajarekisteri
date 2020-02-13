@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.Pane?>
 
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/13.0.2" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="81.0" layoutY="72.0" prefHeight="17.0" prefWidth="299.0" text="Poistetaanko kissa: Kissakaveri Selma" />
       <ButtonBar layoutX="141.0" layoutY="111.0" prefHeight="40.0" prefWidth="200.0">

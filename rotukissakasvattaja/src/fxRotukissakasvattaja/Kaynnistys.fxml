@@ -2,27 +2,29 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E6E6FA;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E6E6FA;" xmlns="http://javafx.com/javafx/13.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRotukissakasvattaja.KaynnistysController">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="137.0" prefWidth="584.0" text="Rotukissakasvattajan kissa- ja omistajarekisteri ">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Button layoutX="321.0" layoutY="351.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Avaa">
+      <Button layoutX="321.0" layoutY="351.0" mnemonicParsing="false" onAction="#handleOK" prefHeight="25.0" prefWidth="100.0" text="OK">
          <tooltip>
             <Tooltip text="Avaa" />
          </tooltip>
       </Button>
-      <Button layoutX="449.0" layoutY="351.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Peruuta">
+      <Button layoutX="449.0" layoutY="351.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="25.0" prefWidth="100.0" text="Peruuta">
          <tooltip>
             <Tooltip text="Peruuta" />
          </tooltip>
       </Button>
+      <Label layoutX="23.0" layoutY="298.0" prefHeight="17.0" prefWidth="100.0" text="Kasvattajanimi:" />
+      <TextField layoutX="110.0" layoutY="294.0" prefHeight="25.0" prefWidth="466.0" fx:id="textKasvattajanimi" text= "Kissakaveri" />
    </children>
 </Pane>

@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/13.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fi.jyu.mit.fxgui.ModalController">
 <bottom>
 <VBox BorderPane.alignment="CENTER">
 <children>
@@ -21,8 +21,8 @@
 <HBox />
 <ButtonBar prefHeight="40.0" prefWidth="200.0">
 <buttons>
-<Button defaultButton="true" text="_Tallenna" />
-<Button cancelButton="true" mnemonicParsing="false" text="Cancel" />
+<Button defaultButton="true" mnemonicParsing="false" onAction="#handleDefaultOK" text="Tallenna"/>
+<Button cancelButton="true" mnemonicParsing="false" onAction="#handleDefaultCancel" text="Cancel"/>
 </buttons>
 <padding>
 <Insets right="10.0" />
