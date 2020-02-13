@@ -151,6 +151,7 @@ public class RotukissakasvattajaGUIController {
         Dialogs.showMessageDialog("Tallennus ei toimi vielä.");
     }
 
+   
 
     /**
      * Tarkistetaan onko tallennus tehty

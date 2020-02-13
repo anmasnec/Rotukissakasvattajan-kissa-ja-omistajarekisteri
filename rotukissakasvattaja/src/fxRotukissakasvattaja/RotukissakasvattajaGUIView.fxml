@@ -24,7 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="667.0" prefWidth="1065.0" xmlns="http://javafx.com/javafx/13.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRotukissakasvattaja.RotukissakasvattajaGUIController">
+<BorderPane prefHeight="667.0" prefWidth="1065.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRotukissakasvattaja.RotukissakasvattajaGUIController">
    <bottom>
       <HBox prefHeight="100.0" prefWidth="1045.0" spacing="10.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -57,13 +57,21 @@
         <menus>
           <Menu text="_Tiedosto">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleTallenna" text="Tallenna">
+                  <MenuItem onAction="#handleTallenna" text="Tallenna">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#handleTulosta" text="Tulosta..." />
-              <MenuItem mnemonicParsing="false" onAction="#handleLopeta" text="Lopeta">
+                  <MenuItem onAction="#handleTulosta" text="Tulosta...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem onAction="#handleTallenna" text="Avaa...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+              <MenuItem onAction="#handleLopeta" text="Lopeta">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
