@@ -19,6 +19,6 @@
 </ButtonBar>
 </bottom>
 <center>
-<TextArea fx:id="tulostusAlue" text="Kissa&#10;id: 8&#10;Kissan nimi: Kissakaveri Urho &#10;Rotu: Ragdoll &#10;EMS-koodi: RAG a 04 &#10;Väri: Sininaamio mitted  &#10;Rekisterinumero: FI KS NO 5839028 &#10;Sukupuoli: uros &#10;Syntymäaika: 10.01.2019 &#10;Emon nimi: Kissakaveri Selma &#10;Emon rekisterinumero: FI KS NO 9712223  &#10;Isän nimi: Kamukisu Rahkasammal &#10;Isän rekisterinumero: FI KS NO 7845012 &#10;Myyntipäivä: 12.04.2019 &#10;Viimeisin rokotus: 05.04.2019 &#10;Seuraava rokotus: &#10;Lisätiedot:  &#10;&#10;id : 2 &#10;Omistajan nimi: Kukka Metsälä &#10;Katuosoite: Metsäpolku 8 &#10;Postinumero: 26100 &#10;Paikkakunta: Metsäkylä  &#10;Puhelinnumero: 0608123445 &#10;Syntymäaika: 16.11.1984 &#10;Lisätiedot: Toimii itsekin kasvattajana &#10;--------------------------------------------------------------------- " BorderPane.alignment="CENTER" />
+<TextArea fx:id="tulostusAlue" text="" BorderPane.alignment="CENTER" />
 </center>
 </BorderPane>

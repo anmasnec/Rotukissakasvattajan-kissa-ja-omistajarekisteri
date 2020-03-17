@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.List;
 
 import fi.jyu.mit.fxgui.ComboBoxChooser;
 import fi.jyu.mit.fxgui.Dialogs;
@@ -23,6 +24,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.text.Font;
 import fi.jyu.mit.fxgui.ListChooser;
 import rekisteri.Kissa;
+import rekisteri.Omistaja;
 import rekisteri.Rekisteri;
 import rekisteri.SailoException;
 
@@ -30,7 +32,7 @@ import rekisteri.SailoException;
 /**
  * Luokka Käyttöliittymän käsittelyyn rotukissakasvattajan ohjelmalle.
  * @author annik
- * @version 3.3.2020
+ * @version 16.3.2020
  *
  */
 public class RotukissakasvattajaGUIController implements Initializable {
@@ -67,7 +69,8 @@ public class RotukissakasvattajaGUIController implements Initializable {
     
     
     @FXML private void handleTulosta() {
-        RotukissaTulostusController.tulosta(null);
+        RotukissaTulostusController tulostusCtrl = RotukissaTulostusController.tulosta(null);
+        tulostaValitut(tulostusCtrl.getTextArea());
     } 
 
     
@@ -85,7 +88,8 @@ public class RotukissakasvattajaGUIController implements Initializable {
     
     @FXML private void handleLisaaUusiOmistaja() {
         //Dialogs.showMessageDialog("Vielä ei osata lisätä omistajaa");
-        ModalController.showModal(RotukissakasvattajaGUIController.class.getResource("LisaaOmistajaDialogView.fxml"), "Omistaja", null, "");
+       // ModalController.showModal(RotukissakasvattajaGUIController.class.getResource("LisaaOmistajaDialogView.fxml"), "Omistaja", null, "");
+        uusiOmistaja();
     }
   
     
@@ -121,8 +125,8 @@ public class RotukissakasvattajaGUIController implements Initializable {
     private TextArea areaKissa = new TextArea();
     
     /**
-     * Tekee tarvittavat muut alustukset, nyt vaihdetaan GridPanen tilalle
-     * yksi iso tekstikenttä, johon voidaan tulostaa kissojen tiedot.
+     * Tekee tarvittavat muut alustukset. Vaihdetaan GridPanen tilalle
+     * yksi iso tekstikenttä, johon tulostetaan kissojen tiedot.
      * Alustetaan myös kissalistan kuuntelija.
      */
     protected void alusta() {
@@ -219,7 +223,8 @@ public class RotukissakasvattajaGUIController implements Initializable {
 
         areaKissa.setText("");
         try (PrintStream os = TextAreaOutputStream.getTextPrintStream(areaKissa)) {
-            kissaKohdalla.tulosta(os);
+           // kissaKohdalla.tulosta(os);
+            tulosta(os, kissaKohdalla);
         }
     }
     
@@ -227,13 +232,13 @@ public class RotukissakasvattajaGUIController implements Initializable {
      * Hakee kissojen tiedot listaan
      * @param kissanro kissan numero, joka aktivoidaan haun jälkeen
      */
-    protected void hae(int kissanro) {
+    protected void haeKissa(int kissanro) {
         chooserKissat.clear();
 
         int index = 0;
         for (int i = 0; i < rekisteri.getKissoja(); i++) {
             Kissa kissa = rekisteri.annaKissa(i);
-            if (kissa.getTunnusNro() == kissanro) index = i;
+            if (kissa.getKissanTunnusNro() == kissanro) index = i;
             chooserKissat.add(kissa.getNimi(), kissa);
         }
         chooserKissat.setSelectedIndex(index); // tästä tulee muutosviesti joka näyttää kissan
@@ -248,12 +253,31 @@ public class RotukissakasvattajaGUIController implements Initializable {
         uusi.taytaKissaTiedoilla();
         try {
             rekisteri.lisaa(uusi);
-        } catch (SailoException e) {
+        } catch (Exception e) { //SailoException!! Herjaa
             Dialogs.showMessageDialog("Ongelmia uuden kissan luomisessa " + e.getMessage());
             return;
         }
-        hae(uusi.getTunnusNro());
+        haeKissa(uusi.getKissanTunnusNro());
     }
+    
+    /** 
+     * Valmiina olevalla kissalle
+     * lisätään omistaja (tekee uuden tyhjän omistajan editointia varten). 
+     */ 
+    protected void uusiOmistaja() { 
+        if ( kissaKohdalla == null ) return;  
+        Omistaja omistaja = new Omistaja();  
+        omistaja.rekisteroi();  
+        omistaja.taytaKissanOmistaja(kissaKohdalla.getKissanTunnusNro());  
+        try {
+        rekisteri.lisaa(omistaja); 
+        } catch (SailoException e) {
+            Dialogs.showMessageDialog("Ongelmia uuden omistajan luomisessa " + e.getMessage());
+            return;
+        }
+        haeKissa(kissaKohdalla.getKissanTunnusNro());          
+    } 
+    
     
     /**
      * @param rekisteri Kissankasvattajan rekisteri jota käytetään tässä käyttöliittymässä
@@ -263,18 +287,7 @@ public class RotukissakasvattajaGUIController implements Initializable {
         naytaKissa();
     }
     
-    /**
-     * Tulostaa kissan tiedot
-     * @param os tietovirta johon tulostetaan
-     * @param kissa tulostettava kissa
-     */
-    public void tulosta(PrintStream os, final Kissa kissa) {
-        os.println("----------------------------------------------");
-        kissa.tulosta(os);
-        os.println("----------------------------------------------");
-    }
-    
-    
+   
     /**
      * Tulostaa listassa olevat kissat tekstialueeseen
      * @param text alue johon tulostetaan
@@ -287,8 +300,44 @@ public class RotukissakasvattajaGUIController implements Initializable {
                 tulosta(os, kissa);
                 os.println("\n\n");
             }
-        }
+//            List<Kissa> kissat = rekisteri.annaKissat(sadepilvinen);   
+//                (Kissa kissa:kissat)
+//                kissa.tulosta(os);
+//        }
     }
 
+  }
+    
+    /**
+     * Tulostaa kissan tiedot
+     * @param os tietovirta johon tulostetaan
+     * @param kissa tulostettava kissa
+     */
+    public void tulosta(PrintStream os, final Kissa kissa) {
+        os.println("----------------------------------------------");
+        kissa.tulosta(os);
+        os.println("----------------------------------------------");
+//        List<Omistaja> omistajat = rekisteri.annaOmistajat(kissa);   
+//        for (Omistaja omistaja:omistajat)
+//            omistaja.tulosta(os);
+        
+//        for (int i = 0; i < rekisteri.getOmistajia(); i++) {
+//            Omistaja[] omistaja = new Omistaja[10];
+//            omistaja = rekisteri.annaOmistajat(kissa);
+//            for (Omistaja omist:omistajat)
+//                omistajat.tulosta(os);
+//            tulosta(os, kissa);
+//            os.println("\n\n");
+        
+        
+            Omistaja [] omistajat = rekisteri.annaOmistajat(kissa);  
+            if (omistajat != null) {
+                for (Omistaja har:omistajat)
+                    har.tulosta(os);   
+            }
+
+   
+    }
+    
 }
 

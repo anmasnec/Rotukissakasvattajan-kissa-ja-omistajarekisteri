@@ -174,21 +174,21 @@
                   <Label text="Viimeisin rokotus" GridPane.columnIndex="1" GridPane.rowIndex="12" />
                   <Label text="Seuraava rokotus" GridPane.columnIndex="1" GridPane.rowIndex="13" />
                   <Label text="Lisätiedot" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-                  <TextField text="Kissakaveri Sadepilvi" GridPane.columnIndex="2" />
-                  <TextField text="Ragdoll" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <TextField text="RAG n 03" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <TextField text="Ruskeanaamio bicolour" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <TextField text="FI KS NO 1234567" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                  <TextField text="naaras" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                  <TextField text="23.05.2019" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                  <TextField text="Kissakaveri Poutapilvi" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                  <TextField text="FI KS NO 4537249" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-                  <TextField text="Kamukisu Rahkasammal" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-                  <TextField text="FI KS NO 7845012" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-                  <TextField text="31.08.2019" GridPane.columnIndex="2" GridPane.rowIndex="11" />
-                  <TextField text="20.08.2019" GridPane.columnIndex="2" GridPane.rowIndex="12" />
-                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="13" />
-                  <TextField text="Myyntiin" GridPane.columnIndex="2" GridPane.rowIndex="14" />
+                  <TextArea text="Kissakaveri Sadepilvi" GridPane.columnIndex="2" />
+                  <TextArea text="Ragdoll" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <TextArea text="RAG n 03" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <TextArea text="Ruskeanaamio bicolour" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <TextArea text="FI KS NO 1234567" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                  <TextArea text="naaras" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                  <TextArea text="23.05.2019" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                  <TextArea text="Kissakaveri Poutapilvi" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                  <TextArea text="FI KS NO 4537249" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                  <TextArea text="Kamukisu Rahkasammal" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                  <TextArea text="FI KS NO 7845012" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                  <TextArea text="31.08.2019" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+                  <TextArea text="20.08.2019" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+                  <TextArea GridPane.columnIndex="2" GridPane.rowIndex="13" />
+                  <TextArea text="Myyntiin" GridPane.columnIndex="2" GridPane.rowIndex="14" />
                </children>
             </GridPane>
          </content>
@@ -222,13 +222,13 @@
                   <Label alignment="CENTER" contentDisplay="RIGHT" text="Puhelinnumero" GridPane.rowIndex="4" />
                   <Label alignment="CENTER" contentDisplay="RIGHT" text="Omistajan syntymäaika" GridPane.rowIndex="5" />
                   <Label alignment="CENTER" contentDisplay="RIGHT" text="Lisätiedot" GridPane.rowIndex="6" />
-                  <TextField GridPane.columnIndex="1" />
-                  <TextField prefHeight="25.0" prefWidth="266.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField prefHeight="25.0" prefWidth="273.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextArea text="Sade Pilvinen" GridPane.columnIndex="1" />
+                  <TextArea prefHeight="25.0" prefWidth="266.0" text="Pilvitie 2 B 16" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextArea prefHeight="25.0" prefWidth="273.0" text="97612" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextArea text="Pilvelä" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextArea text="0601456387" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextArea text="05.06.1991" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextArea GridPane.columnIndex="1" GridPane.rowIndex="6" />
                </children>
             </GridPane>
          </center></BorderPane>

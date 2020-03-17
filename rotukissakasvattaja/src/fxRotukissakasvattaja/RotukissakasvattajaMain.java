@@ -16,7 +16,7 @@ import rekisteri.Rekisteri;
  * myös pitää kasvattaja ajantasalla omistamiensa kissojen rokotuksista.
  * Tarvitaan RotukissakasvattajaGUIView.fxml ja RotukissakasvattajaGUIController.java.
  * @author annik
- * @version 2.3.2020
+ * @version 16.3.2020
  * 
  * Pääohjelma Rotukissakasvattajarekisteri-ohjelman käynnistämiseksi
  *
@@ -47,10 +47,7 @@ public class RotukissakasvattajaMain extends Application {
 			kasvattajaCtrl.setRekisteri(rekisteri);
 			
 			primaryStage.show();
-			if ( !kasvattajaCtrl.avaa() ) Platform.exit();
-			
-			
-			
+			if ( !kasvattajaCtrl.avaa() ) Platform.exit();	
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

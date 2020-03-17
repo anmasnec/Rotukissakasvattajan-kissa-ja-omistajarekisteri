@@ -10,7 +10,7 @@ import javafx.scene.control.TextArea;
 * Tulostuksen hoitava luokka
 * 
 * @author annik
-* @version 10.2.2020
+* @version 11.3.2020
 */
 
 public class RotukissaTulostusController implements ModalControllerInterface<String>{
@@ -48,14 +48,25 @@ public class RotukissaTulostusController implements ModalControllerInterface<Str
         //
     }
     
+    /**
+     * @return Alue johon tulostetaan
+     */
+    public TextArea getTextArea() {
+        return tulostusAlue;
+    }
+    
+    
     
     /**
      * Näyttää tulostusalueessa tekstin
-     * @param tulostus tulostettava teskti
+     * @param tulostus tulostettava teksti
+     * @return kontrolleri, jolta voidaan pyytää lisää tietoa
      */
-    public static void tulosta(String tulostus) {
+    public static RotukissaTulostusController tulosta(String tulostus) {
+        RotukissaTulostusController tulostusCtrl = 
         ModalController.showModeless(RotukissaTulostusController.class.getResource("RotukissaTulostusView.fxml"),
                 "Tulostus", tulostus);
+        return tulostusCtrl;
     }
 
 }
