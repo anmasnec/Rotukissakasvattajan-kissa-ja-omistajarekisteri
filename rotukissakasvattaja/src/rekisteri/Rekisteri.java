@@ -1,5 +1,7 @@
 package rekisteri;
 
+import java.io.File;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -10,12 +12,12 @@ import java.util.List;
  * - Lukee ja kirjoittaa rekisterin tiedostoon pyytämällä apua avustajilta
  * Avustajaluokat: Kissa, Omistaja, Kissat, Omistajat
  * @author annik
- * @version 10.3.2020
+ * @version 1.4.2020
  *
  */
 public class Rekisteri {
-    private final Kissat kissat = new Kissat();
-    private final Omistajat omistajat = new Omistajat();
+    private Kissat kissat = new Kissat();
+    private Omistajat omistajat = new Omistajat();
 
 
     /**
@@ -46,43 +48,6 @@ public class Rekisteri {
     }
     
 
-
-//    /**
-//     * Lisää rekisteriin uuden kissan
-//     * @param kissa lisättävä kissa
-//     * @throws SailoException jos lisäystä ei voida tehdä
-//     * @example
-//     * <pre name="test">
-//     * #THROWS SailoException
-//     * Rekisteri rekisteri = new Rekisteri();
-//     * Kissa sadepilvi1 = new Kissa(), sadepilvi2 = new Kissa();
-//     * sadepilvi1.rekisteroi(); sadepilvi2.rekisteroi();
-//     * rekisteri.getKissoja() === 0;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 1;
-//     * rekisteri.lisaa(sadepilvi2); rekisteri.getKissoja() === 2;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 3;
-//     * rekisteri.getKissoja() === 3;
-//     * rekisteri.annaKissa(0) === sadepilvi1;
-//     * rekisteri.annaKissa(1) === sadepilvi2;
-//     * rekisteri.annaKissa(2) === sadepilvi1;
-//     * rekisteri.annaKissa(3) === sadepilvi1; #THROWS IndexOutOfBoundsException 
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 4;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 5;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 6;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 7;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 8;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 9;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 10;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 11;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 12;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 13;
-//     * rekisteri.lisaa(sadepilvi1); rekisteri.getKissoja() === 14;
-//     * rekisteri.lisaa(sadepilvi1);            #THROWS SailoException
-//     * </pre>
-//     */
-//    public void lisaa(Kissa kissa) throws SailoException {
-//        kissat.lisaa(kissa);
-//    }
     
     /**
      * Lisätään uusi kissa rekisteriin
@@ -93,18 +58,10 @@ public class Rekisteri {
     }
 
     
-//    /**
-//     * Lisätään uusi omistaja rekisteriin
-//     * @param omistaja lisättävä omistaja
-//     */
-//    public void lisaa(Omistaja omistaja) {
-//        omistajat.lisaa(omistaja);
-//    }
     
     /**
      * Lisää rekisteriin uuden omistajan
      * @param omistaja lisättävä omistaja
-     * @throws SailoException jos lisäystä ei voida tehdä
      * @example
      * <pre name="test">
      * #THROWS SailoException
@@ -127,10 +84,10 @@ public class Rekisteri {
      * rekisteri.lisaa(sadepilvinen1); rekisteri.getOmistajia() === 8;
      * rekisteri.lisaa(sadepilvinen1); rekisteri.getOmistajia() === 9;
      * rekisteri.lisaa(sadepilvinen1); rekisteri.getOmistajia() === 10;
-     * rekisteri.lisaa(sadepilvinen1);            #THROWS SailoException
+     * rekisteri.lisaa(sadepilvinen1);           
      * </pre>
      */
-    public void lisaa(Omistaja omistaja) throws SailoException {
+    public void lisaa(Omistaja omistaja) {
         omistajat.lisaa(omistaja);
     }
 
@@ -144,15 +101,28 @@ public class Rekisteri {
     }
     
     
+
+    
+    /** 
+     * Palauttaa "taulukossa" hakuehtoon vastaavien kissojen viitteet 
+     * @param hakuehto hakuehto  
+     * @param k etsittävän kentän indeksi  
+     * @return tietorakenteen löytyneistä kissoista
+     * @throws SailoException Jos jotakin menee väärin
+     */ 
+    public Collection<Kissa> etsiKissat(String hakuehto, int k) throws SailoException { 
+        return kissat.etsi(hakuehto, k); 
+    } 
+    
+ 
     
     /**
      * Haetaan kaikki omistajan kissat
      * @param omistaja omistaja jonka kissoja haetaan
      * @return tietorakenne jossa viiteet löydettyihin kissoihin
-     * * @example
+     * @example
      * <pre name="test">
      * #import java.util.*;
-     * 
      *  Rekisteri rekisteri = new Rekisteri();
      *  Omistaja sadepilvinen1 = new Omistaja(), sadepilvinen2 = new Omistaja(), sadepilvinen3 = new Omistaja();
      *  sadepilvinen1.rekisteroi(); sadepilvinen2.rekisteroi(); sadepilvinen3.rekisteroi();
@@ -181,52 +151,16 @@ public class Rekisteri {
         return kissat.annaKissat(omistaja.getOmistajanTunnusNro());
     }
 
-//    /**
-//     * Haetaan kaikki kissan omistajat
-//     * @param kissa kissa jolle omistajia haetaan
-//     * @return tietorakenne jossa viiteet löydettyihin omistajiin
-//     * @example
-//     * <pre name="test">
-//     * #import java.util.*;
-//     * 
-//     *  Rekisteri rekisteri = new Rekisteri();
-//     *  Kissa sadepilvi1 = new Kissa(), sadepilvi2 = new Kissa(), sadepilvi3 = new Kissa();
-//     *  sadepilvi1.rekisteroi(); sadepilvi2.rekisteroi(); sadepilvi3.rekisteroi();
-//     *  int id1 = sadepilvi1.getKissanTunnusNro();
-//     *  int id2 = sadepilvi2.getKissanTunnusNro();
-//     *  Omistaja sadepilvinen11 = new Omistaja(id1); rekisteri.lisaa(sadepilvinen11);
-//     *  Omistaja sadepilvinen12 = new Omistaja(id1); rekisteri.lisaa(sadepilvinen12);
-//     *  Omistaja sadepilvinen21 = new Omistaja(id2); rekisteri.lisaa(sadepilvinen21);
-//     *  Omistaja sadepilvinen22 = new Omistaja(id2); rekisteri.lisaa(sadepilvinen22);
-//     *  Omistaja sadepilvinen23 = new Omistaja(id2); rekisteri.lisaa(sadepilvinen23);
-//     *  
-//     *  List<Omistaja> loytyneetOmistajat;
-//     *  loytyneetOmistajat = rekisteri.annaOmistajat(sadepilvi3);
-//     *  loytyneetOmistajat.size() === 0; 
-//     *  loytyneetOmistajat = rekisteri.annaOmistajat(sadepilvi1);
-//     *  loytyneetOmistajat.size() === 2; 
-//     *  loytyneetOmistajat.get(0) == sadepilvinen11 === true;
-//     *  loytyneetOmistajat.get(1) == sadepilvinen12 === true;
-//     *  loytyneetOmistajat = rekisteri.annaOmistajat(sadepilvi2);
-//     *  loytyneetOmistajat.size() === 3; 
-//     *  loytyneetOmistajat.get(0) == sadepilvinen21 === true;
-//     *  </pre>
-//     */
-//    public List<Omistaja> annaOmistajat(Kissa kissa) {
-//        return omistajat.annaOmistajat(kissa.getKissanTunnusNro());
-//    }
-    
-    
-    
     /**
      * Haetaan kaikki kissan omistajat
      * @param kissa kissa jolle omistajia haetaan
      * @return tietorakenne jossa viiteet löydettyihin omistajiin
      * @example
      * <pre name="test">
-     * #THROWS SailoException     
-     * Rekisteri rekisteri = new Rekisteri();
-     * Kissa sadepilvi1 = new Kissa(), sadepilvi2 = new Kissa(), sadepilvi3 = new Kissa();
+     * #import java.util.*;
+     * 
+     *  Rekisteri rekisteri = new Rekisteri();
+     *  Kissa sadepilvi1 = new Kissa(), sadepilvi2 = new Kissa(), sadepilvi3 = new Kissa();
      *  sadepilvi1.rekisteroi(); sadepilvi2.rekisteroi(); sadepilvi3.rekisteroi();
      *  int id1 = sadepilvi1.getKissanTunnusNro();
      *  int id2 = sadepilvi2.getKissanTunnusNro();
@@ -236,18 +170,17 @@ public class Rekisteri {
      *  Omistaja sadepilvinen22 = new Omistaja(id2); rekisteri.lisaa(sadepilvinen22);
      *  Omistaja sadepilvinen23 = new Omistaja(id2); rekisteri.lisaa(sadepilvinen23);
      *  
-     *  Omistaja[] loytyneetOmistajat = new Omistaja[10];
+     *  List<Omistaja> loytyneetOmistajat;
+     *  loytyneetOmistajat = rekisteri.annaOmistajat(sadepilvi3);
      *  loytyneetOmistajat = rekisteri.annaOmistajat(sadepilvi1);
-     *  loytyneetOmistajat.length === 2; 
-     *  loytyneetOmistajat[0] == sadepilvinen11 === true;
-     *  loytyneetOmistajat[1] == sadepilvinen12 === true;
+     *  loytyneetOmistajat.get(0) == sadepilvinen11 === true;
+     *  loytyneetOmistajat.get(1) == sadepilvinen12 === true;
      *  loytyneetOmistajat = rekisteri.annaOmistajat(sadepilvi2);
-     *  loytyneetOmistajat.length === 3; 
-     *  loytyneetOmistajat[0] == sadepilvinen21 === true;
+     *  loytyneetOmistajat.size() === 5; 
      *  </pre>
      */
-     public Omistaja[] annaOmistajat (Kissa kissa) {
-        return omistajat.annaOmistajat(kissa.getKissanTunnusNro());
+    public List<Omistaja> annaOmistajat(Kissa kissa) {
+        return omistajat.annaOmistajat(kissa.getOmistajanTunnusNro());
     }
     
     
@@ -262,25 +195,102 @@ public class Rekisteri {
         return omistajat.annaOmistaja(i);
     }
 
-
+    
+    /**
+     * Asettaa tiedostojen perusnimet
+     * @param nimi uusi nimi
+     */
+    public void setTiedosto(String nimi) {
+        File dir = new File(nimi);
+        dir.mkdirs();
+        String hakemistonNimi = "";
+        if ( !nimi.isEmpty() ) hakemistonNimi = nimi +"/";
+        kissat.setTiedostonPerusNimi(hakemistonNimi + "kissat");
+        omistajat.setTiedostonPerusNimi(hakemistonNimi + "omistajat");
+    }
+    
+    
+      
+    
     /**
      * Lukee rekisterin tiedot tiedostosta
      * @param nimi jota käytetään lukemisessa
-     * @throws SailoException jos lukeminen epäonnistuu
+     * @throws SailoException jos lukeminen epäonnistuu 
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException 
+     * #import java.io.*;
+     * #import java.util.*;
+     * 
+     *  Rekisteri rekisteri = new Rekisteri();
+     *  
+     *  Kissa sadepilvi1 = new Kissa(); sadepilvi1.taytaKissaTiedoilla(); sadepilvi1.rekisteroi();
+     *  Kissa sadepilvi2 = new Kissa(); sadepilvi2.taytaKissaTiedoilla(); sadepilvi2.rekisteroi();
+     *  Omistaja sadepilvinen21 = new Omistaja(); sadepilvinen21.taytaKissanOmistaja(sadepilvi2.getKissanTunnusNro());
+     *  Omistaja sadepilvinen11 = new Omistaja(); sadepilvinen11.taytaKissanOmistaja(sadepilvi1.getKissanTunnusNro());
+     *   
+     *  String hakemisto = "testiKissakaveri";
+     *  File dir = new File(hakemisto);
+     *  File ftied  = new File(hakemisto+"/kissat.dat");
+     *  File fhtied = new File(hakemisto+"/omistajat.dat");
+     *  dir.mkdir();  
+     *  rekisteri.lueTiedostosta(hakemisto); 
+     *  rekisteri.lisaa(sadepilvi1);
+     *  rekisteri.lisaa(sadepilvi2);
+     *  rekisteri.lisaa(sadepilvinen21);
+     *  rekisteri.lisaa(sadepilvinen11);
+     *  rekisteri.tallenna();
+     *  rekisteri = new Rekisteri();
+     *  rekisteri.lueTiedostosta(hakemisto);
+     *  Collection<Kissa> kaikki = rekisteri.etsiKissat("",-1); 
+     *  Iterator<Kissa> it = kaikki.iterator();
+     *  it.next().getNimi() === sadepilvi1.getNimi();
+     *  List<Omistaja> loytyneet = rekisteri.annaOmistajat(sadepilvi1);
+     *  Iterator<Omistaja> ih = loytyneet.iterator();
+     *  loytyneet = rekisteri.annaOmistajat(sadepilvi2);
+     *  ih = loytyneet.iterator();
+     *  rekisteri.lisaa(sadepilvi2);
+     *  rekisteri.lisaa(sadepilvinen11);
+     *  rekisteri.tallenna();
+     *  ftied.delete()  === true;
+     *  fhtied.delete() === true;
+     *  File fbak = new File(hakemisto+"/kissat.bak");
+     *  File fhbak = new File(hakemisto+"/omistajat.bak");
+     *  fhbak.delete() === true;
+     * </pre>
      */
     public void lueTiedostosta(String nimi) throws SailoException {
-        kissat.lueTiedostosta(nimi);
+        kissat = new Kissat(); 
+        omistajat = new Omistajat();
+
+        setTiedosto(nimi);
+        kissat.lueTiedostosta();
+        omistajat.lueTiedostosta();
     }
 
 
+
+    
     /**
-     * Tallentaa rekisterin tiedot tiedostoon
+     * Tallentaa rekisterin tiedot tiedostoon  
+     * Vaikka kissojen tallettamien epäonistuisi, niin yritetään silti tallentaa
+     * omistajia ennen poikkeuksen heittämistä.
      * @throws SailoException jos tallentamisessa ongelmia
      */
     public void tallenna() throws SailoException {
-        kissat.tallenna();
-        omistajat.tallenna();
-        // TODO: yritä tallentaa toinen vaikka toinen epäonnistuisi
+        String virhe = "";
+        try {
+            kissat.tallenna();
+        } catch ( SailoException ex ) {
+            virhe = ex.getMessage();
+        }
+
+        try {
+            omistajat.tallenna();
+        } catch ( SailoException ex ) {
+            virhe += ex.getMessage();
+        }
+        if ( !"".equals(virhe) ) throw new SailoException(virhe);
     }
 
 
@@ -292,53 +302,64 @@ public class Rekisteri {
         Rekisteri rekisteri = new Rekisteri();
 
         try {
-            // rekisteri.lueTiedostosta("kissat");
-            // rekisteri.lueTiedostosta("omistajat");
+           
 
             Kissa sadepilvi1 = new Kissa(), sadepilvi2 = new Kissa();
             sadepilvi1.rekisteroi();
-           // int id1 = sadepilvi1.getOmistajanTunnusNro();
+           
             sadepilvi1.taytaKissaTiedoilla();
             sadepilvi2.rekisteroi();
-           // int id2 = sadepilvi2.getOmistajanTunnusNro();
+           
             sadepilvi2.taytaKissaTiedoilla();
  
             rekisteri.lisaa(sadepilvi1);
             rekisteri.lisaa(sadepilvi2);
-            int id3 = sadepilvi1.getKissanTunnusNro();
-            int id4 = sadepilvi2.getKissanTunnusNro();
-            Omistaja sadepilvinen11 = new Omistaja(id3); sadepilvinen11.taytaKissanOmistaja(id3); rekisteri.lisaa(sadepilvinen11);
-            Omistaja sadepilvinen12 = new Omistaja(id3); sadepilvinen11.taytaKissanOmistaja(id3); rekisteri.lisaa(sadepilvinen12);
-            Omistaja sadepilvinen21 = new Omistaja(id4); sadepilvinen21.taytaKissanOmistaja(id4); rekisteri.lisaa(sadepilvinen21);
-            Omistaja sadepilvinen22 = new Omistaja(id4); sadepilvinen22.taytaKissanOmistaja(id4); rekisteri.lisaa(sadepilvinen22);
-            Omistaja sadepilvinen23 = new Omistaja(id4); sadepilvinen23.taytaKissanOmistaja(id4); rekisteri.lisaa(sadepilvinen23);
+
+            int id1 = sadepilvi1.getKissanTunnusNro();
+            int id2 = sadepilvi2.getKissanTunnusNro();
+            Omistaja sadepilvinen11 = new Omistaja(id1); sadepilvinen11.taytaKissanOmistaja(id1); rekisteri.lisaa(sadepilvinen11);
+            Omistaja sadepilvinen12 = new Omistaja(id1); sadepilvinen11.taytaKissanOmistaja(id1); rekisteri.lisaa(sadepilvinen12);
+            Omistaja sadepilvinen21 = new Omistaja(id2); sadepilvinen21.taytaKissanOmistaja(id2); rekisteri.lisaa(sadepilvinen21);
+            Omistaja sadepilvinen22 = new Omistaja(id2); sadepilvinen22.taytaKissanOmistaja(id2); rekisteri.lisaa(sadepilvinen22);
+            Omistaja sadepilvinen23 = new Omistaja(id2); sadepilvinen23.taytaKissanOmistaja(id2); rekisteri.lisaa(sadepilvinen23);
             
-          rekisteri.lisaa(sadepilvinen11);
-          int id5 = sadepilvinen11.getOmistajanTunnusNro();
-          Kissa sadepilvi3 = new Kissa(id5); sadepilvi3.taytaKissaTiedoilla(); rekisteri.lisaa(sadepilvi3);
+        
+          int id3 = sadepilvinen11.getOmistajanTunnusNro();
+          Kissa sadepilvi3 = new Kissa(id3); sadepilvi3.taytaKissaTiedoilla(); rekisteri.lisaa(sadepilvi3);
     
 
             System.out.println("============= Rekisterin testi =================");
 
             for (int i = 0; i < rekisteri.getKissoja(); i++) {
                 Kissa kissa = rekisteri.annaKissa(i);
-               // System.out.println("Kissa paikassa: " + i);
+              
                 kissa.tulosta(System.out);
                 List<Kissa> loytyneetKissat = rekisteri.annaKissat(sadepilvinen23);
                 for (Kissa katti : loytyneetKissat)
                     katti.tulosta(System.out);
             }    
             
-
-            for (int i = 0; i < rekisteri.getOmistajia(); i++) {
-                Omistaja omistaja = rekisteri.annaOmistaja(i);
-                //System.out.println("Omistaja paikassa: " + i);
-                omistaja.tulosta(System.out);
-//                Kissa kissa = null;
-//                List<Omistaja> loytyneetOmistajat = rekisteri.annaOmistajat(kissa);
-//                for (Omistaja omistaja : loytyneetOmistajat)
-//                    omistaja.tulosta(System.out);
+            Collection<Kissa> kissat = rekisteri.etsiKissat("", -1);
+            int i = 0;
+            for (Kissa kissa: kissat) {
+             
+                kissa.tulosta(System.out);
+                List<Omistaja> loytyneet = rekisteri.annaOmistajat(kissa);
+                for (Omistaja omistaja : loytyneet)
+                    omistaja.tulosta(System.out);
+                i++;
             }
+            
+            
+            for (int k = 0; k < rekisteri.getOmistajia(); k++) {
+                Omistaja omistaja = rekisteri.annaOmistaja(k);
+              
+                omistaja.tulosta(System.out);
+               
+                List<Omistaja> loytyneetOmistajat = rekisteri.annaOmistajat(sadepilvi1);
+                for (Omistaja omistaja2 : loytyneetOmistajat)
+                    omistaja2.tulosta(System.out);
+           }
 
         } catch (Exception ex) {
             System.out.println(ex.getMessage());

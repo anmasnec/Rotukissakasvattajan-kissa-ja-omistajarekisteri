@@ -2,6 +2,8 @@ package rekisteri;
 
 import java.io.*;
 
+import fi.jyu.mit.ohj2.Mjonot;
+
 import static rekisteri.Syntymaaika.*;
 
 /**
@@ -12,10 +14,8 @@ import static rekisteri.Syntymaaika.*;
  * - Osaa antaa merkkijonona i:n kentän tiedoiksi
  * - Osaa laittaa merkkijonon i:neksi kentäksi
  * @author annik
- * @version 16.3.2020
+ * @version 1.4.2020
  * 
- * vrt. Jasen-luokkaan
- *
  */
 public class Omistaja {
     
@@ -156,7 +156,86 @@ public class Omistaja {
         return kissantunnusNro;
     }
 
+    
+    /**
+     * Asettaa omistajalle tunnusnumeron ja samalla varmistaa että
+     * seuraava numero on aina suurempi kuin tähän mennessä suurin.
+     * @param omistajanr asetettava omistajan tunnusnumero
+     */
+    private void setOmistajanTunnusNro(int omistajanr) {
+        omistajantunnusNro = omistajanr;
+        if (omistajantunnusNro >= seuraavaNro) seuraavaNro = omistajantunnusNro + 1;
+    }
+    
 
+    /**
+     * Palauttaa omistajan tiedot merkkijonona jonka voi tallentaa tiedostoon.
+     * @return omistaja tolppaeroteltuna merkkijonona 
+     * @example
+     * <pre name="test">
+     *   Omistaja omistaja = new Omistaja();
+     *   omistaja.parse("   1  |  Sade Pilvinen  | Pilvitie 2 B 16");
+     *   omistaja.toString().startsWith("1|Sade Pilvinen|Pilvitie 2 B 16|") === true; // on enemmänkin kuin 3 kenttää, siksi loppu |
+     * </pre>  
+     */
+    @Override
+    public String toString() {
+        return "" +
+                getOmistajanTunnusNro() + "|" +
+                omistajanNimi + "|" +
+                katuosoite + "|" +
+                postinumero + "|" +
+                paikkakunta + "|" +
+                puhelinnumero + "|" +
+                omistajanSyntymaAika + "|" +
+                omistajanLisatiedot;
+    }
+
+
+    /**
+     * Selvittää omistajan tiedot | erotellusta merkkijonosta
+     * Pitää huolen että seuraavaNro on suurempi kuin tuleva tunnusNro.
+     * @param rivi josta omistajan tiedot otetaan
+     * 
+     * @example
+     * <pre name="test">
+     *   Omistaja omistaja = new Omistaja();
+     *   omistaja.parse("   1  |  Sade Pilvinen   | Pilvitie 2 B 16");
+     *   omistaja.getOmistajanTunnusNro() === 1;
+     *   omistaja.toString().startsWith("1|Sade Pilvinen|Pilvitie 2 B 16|") === true; // on enemmänkin kuin 3 kenttää, siksi loppu |
+     *
+     *   omistaja.rekisteroi();
+     *   int n = omistaja.getOmistajanTunnusNro();
+     *   omistaja.parse(""+(n+20));       // Otetaan merkkijonosta vain tunnusnumero
+     *   omistaja.rekisteroi();           // ja tarkistetaan että seuraavalla kertaa tulee yhtä isompi
+     *   omistaja.getOmistajanTunnusNro() === n+20+1;
+     *     
+     * </pre>
+     */
+    public void parse(String rivi) {
+        StringBuffer sb = new StringBuffer(rivi);
+        setOmistajanTunnusNro(Mjonot.erota(sb, '|', getOmistajanTunnusNro()));
+        omistajanNimi = Mjonot.erota(sb, '|', omistajanNimi);
+        katuosoite = Mjonot.erota(sb, '|', katuosoite);
+        postinumero = Mjonot.erota(sb, '|', postinumero);
+        paikkakunta = Mjonot.erota(sb, '|', paikkakunta);
+        puhelinnumero = Mjonot.erota(sb, '|', puhelinnumero);
+        omistajanSyntymaAika = Mjonot.erota(sb, '|', omistajanSyntymaAika);
+        omistajanLisatiedot = Mjonot.erota(sb, '|', omistajanLisatiedot);
+    }
+    
+    
+    @Override
+    public boolean equals(Object omistaja) {
+        if ( omistaja == null ) return false;
+        return this.toString().equals(omistaja.toString());
+    }
+
+
+    @Override
+    public int hashCode() {
+        return omistajantunnusNro;
+    }
 
     /**
      * Testiohjelma Omistajalle.
@@ -165,13 +244,13 @@ public class Omistaja {
     public static void main(String[] args) {
         Omistaja sadepilvinen = new Omistaja();
         sadepilvinen.rekisteroi();
-        sadepilvinen.tulosta(System.out);
+       
         sadepilvinen.taytaKissanOmistaja(1);
         sadepilvinen.tulosta(System.out);
         
         Omistaja sadepilvinen2 = new Omistaja();
         sadepilvinen2.rekisteroi();
-        sadepilvinen2.tulosta(System.out);
+       
         sadepilvinen2.taytaKissanOmistaja(2);
         sadepilvinen2.tulosta(System.out);
     }

@@ -16,7 +16,7 @@ import rekisteri.Rekisteri;
  * myös pitää kasvattaja ajantasalla omistamiensa kissojen rokotuksista.
  * Tarvitaan RotukissakasvattajaGUIView.fxml ja RotukissakasvattajaGUIController.java.
  * @author annik
- * @version 16.3.2020
+ * @version 1.4.2020
  * 
  * Pääohjelma Rotukissakasvattajarekisteri-ohjelman käynnistämiseksi
  *
@@ -30,7 +30,6 @@ public class RotukissakasvattajaMain extends Application {
 		    final Pane root = (Pane)ldr.load();
 		   // BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("RotukissakasvattajaGUIView.fxml"));
 			//Pane root = (Pane)FXMLLoader.load(getClass().getResource("Kaynnistys.fxml"));
-			//final FXMLLoader ldr = new FXMLLoader(getClass().getResource("KerhoGUIView.fxml"));
 			//final RotukissakasvattajaGUIController rotukissakasvattajaCtrl = (RotukissakasvattajaGUIController) ldr.getController();
 			
 			final RotukissakasvattajaGUIController kasvattajaCtrl = (RotukissakasvattajaGUIController)ldr.getController();
@@ -47,6 +46,12 @@ public class RotukissakasvattajaMain extends Application {
 			kasvattajaCtrl.setRekisteri(rekisteri);
 			
 			primaryStage.show();
+			
+			Application.Parameters params = getParameters(); 
+            if ( params.getRaw().size() > 0 ) 
+                kasvattajaCtrl.lueTiedosto(params.getRaw().get(0)); 
+			
+            else
 			if ( !kasvattajaCtrl.avaa() ) Platform.exit();	
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -55,7 +60,7 @@ public class RotukissakasvattajaMain extends Application {
 	
 	/**
 	 * Käynnistetään rotukissakasvattajan ohjelma.
-	 * @param args ei käytössä
+	 * @param args komentorivin parametrit
 	 */
 	public static void main(String[] args) {
 		launch(args);

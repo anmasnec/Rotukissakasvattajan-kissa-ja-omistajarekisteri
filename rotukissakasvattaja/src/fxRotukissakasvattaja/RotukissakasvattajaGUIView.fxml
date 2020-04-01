@@ -122,7 +122,7 @@
                      <children>
                         <Pane prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <ListChooser fx:id="chooserKissat" layoutX="-1.0" layoutY="22.0" prefHeight="272.0" prefWidth="170.0" rivit="Kissakaveri Sadepilvi&#10;Kissakaveri Saniainen&#10;Kissakaveri Sateenkaari&#10;Kissakaveri April&#10;Kissakaveri Peter Pan&#10;Kissakaveri Poutapilvi&#10;Kissakaveri Selma&#10;Kissakaveri Urho&#10;Sade Pilvinen&#10;Kukka Metsälä&#10;Kari Luminen&#10;Lilja Lehtinen&#10;Pena Kissala" />
+                              <ListChooser fx:id="chooserKissat" maxHeight="1.7976931348623157E308" layoutX="-1.0" layoutY="22.0" prefHeight="272.0" prefWidth="170.0" rivit="Kissakaveri Sadepilvi&#10;Kissakaveri Saniainen&#10;Kissakaveri Sateenkaari&#10;Kissakaveri April&#10;Kissakaveri Peter Pan&#10;Kissakaveri Poutapilvi&#10;Kissakaveri Selma&#10;Kissakaveri Urho&#10;Sade Pilvinen&#10;Kukka Metsälä&#10;Kari Luminen&#10;Lilja Lehtinen&#10;Pena Kissala" />
                            </children>
                         </Pane>
                      </children>

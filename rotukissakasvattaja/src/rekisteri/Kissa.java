@@ -4,6 +4,9 @@
 package rekisteri;
 
 import java.io.*;
+
+import fi.jyu.mit.ohj2.Mjonot;
+
 import static rekisteri.Rekisterinumero.*;
 import static rekisteri.Omistajanumero.*;
 
@@ -16,7 +19,7 @@ import static rekisteri.Omistajanumero.*;
  * - Osaa laittaa merkkijonon i:neksi kentäksi      
  * - Osaa ilmoittaa kissasta, jonka seuraava rokotus on pian ajankohtainen  //TODO: tee tämä 
  * @author annik
- * @version 16.3.2020
+ * @version 1.4.2020
  * 
  */
 public class Kissa {
@@ -25,7 +28,7 @@ public class Kissa {
     private int        omistajantunnusNro;
     private String     nimi          = "";
     private String     rotu          = "";
-    private String     EMSkoodi      = "";
+    private String     emsKoodi      = "";
     private String     vari          = "";
     private String     rekisteriNro  = "";
     private String     sukupuoli     = "";
@@ -81,7 +84,7 @@ public class Kissa {
         nimi = "Kissakaveri Sadepilvi"; 
         rekisteriNro = "FI KS NO "+ arvottuRekNro;  
         rotu = "Ragdoll";
-        EMSkoodi = "RAG n 03";
+        emsKoodi = "RAG n 03";
         vari = "Ruskeanaamio bicolour";
         sukupuoli = "naaras";
         syntymaAika  = "23.05.2019";
@@ -124,7 +127,7 @@ public class Kissa {
         out.println("Nimi: " + nimi);
         out.println("Rekisterinumero: " + rekisteriNro);
         out.println("Rotu: " + rotu); 
-        out.println("EMS-koodi: " + EMSkoodi);
+        out.println("EMS-koodi: " + emsKoodi);
         out.println("Väri: " + vari);
         out.println("Sukupuoli: " + sukupuoli); 
         out.println("Syntymäaika: " + syntymaAika); 
@@ -177,6 +180,18 @@ public class Kissa {
     public int getKissanTunnusNro() {
         return kissantunnusNro;
     }
+    
+    
+    /**
+     * Asettaa kissan tunnusnumeron ja samalla varmistaa että
+     * seuraava numero on aina suurempi kuin tähän mennessä suurin.
+     * @param kissanr asetettava tunnusnumero
+     */
+    private void setKissanTunnusNro(int kissanr) {
+        kissantunnusNro = kissanr;
+        if (kissantunnusNro >= seuraavaNro) seuraavaNro = kissantunnusNro + 1;
+    }
+    
 
     /**
      * Palautetaan mille omistajalle kissa kuuluu
@@ -184,6 +199,93 @@ public class Kissa {
      */
     public int getOmistajanTunnusNro() {
         return omistajantunnusNro;
+    }
+    
+    
+    /**
+     * Palauttaa kissan tiedot merkkijonona jonka voi tallentaa tiedostoon.
+     * @return kissa tolppaeroteltuna merkkijonona 
+     * @example
+     * <pre name="test">
+     *   Kissa kissa = new Kissa();
+     *   kissa.parse("   1  |  1  | Kissakaveri Sadepilvi");
+     *   kissa.toString().startsWith("1|1|Kissakaveri Sadepilvi|") === true; // on enemmänkin kuin 3 kenttää, siksi loppu |
+     * </pre>  
+     */
+    @Override
+    public String toString() {
+        return "" +
+                getKissanTunnusNro() + "|" +
+                getOmistajanTunnusNro() + "|" +
+                nimi + "|" +
+                rotu + "|" +
+                emsKoodi + "|" +
+                vari + "|" +
+                rekisteriNro + "|" +
+                sukupuoli + "|" +
+                syntymaAika + "|" +
+                emonNimi + "|" +
+                emonRekisteriNro + "|" +
+                isanNimi + "|" +
+                isanRekisteriNro + "|" +
+                myyntipaiva + "|" +
+                viimeisinRokotus + "|" +
+                seuraavaRokotus + "|" +
+                lisatiedot;
+    }
+    
+    
+    /**
+     * Selvittää kissan tiedot | erotellusta merkkijonosta
+     * Pitää huolen että seuraavaNro on suurempi kuin tuleva kissantunnusNro.
+     * @param rivi josta kissan tiedot otetaan
+     * 
+     * @example
+     * <pre name="test">
+     *   Kissa kissa = new Kissa();
+     *   kissa.parse("   1  |  1   | Kissakaveri Sadepilvi");
+     *   kissa.getKissanTunnusNro() === 1;
+     *   kissa.toString().startsWith("1|1|Kissakaveri Sadepilvi|") === true; // on enemmäkin kuin 3 kenttää, siksi loppu |
+     *
+     *   kissa.rekisteroi();
+     *   int n = kissa.getKissanTunnusNro();
+     *   kissa.parse(""+(n+20));       // Otetaan merkkijonosta vain tunnusnumero
+     *   kissa.rekisteroi();           // ja tarkistetaan että seuraavalla kertaa tulee yhtä isompi
+     *   kissa.getKissanTunnusNro() === n+20+1;    
+     * </pre>
+     */
+    public void parse(String rivi) {
+        StringBuffer sb = new StringBuffer(rivi);
+        setKissanTunnusNro(Mjonot.erota(sb, '|', getKissanTunnusNro()));
+        omistajantunnusNro = Mjonot.erota(sb, '|', getOmistajanTunnusNro());
+        nimi = Mjonot.erota(sb, '|', nimi);
+        rotu = Mjonot.erota(sb, '|', rotu);
+        emsKoodi = Mjonot.erota(sb, '|', emsKoodi);
+        vari = Mjonot.erota(sb, '|', vari);
+        rekisteriNro = Mjonot.erota(sb, '|', rekisteriNro);
+        sukupuoli = Mjonot.erota(sb, '|', sukupuoli);
+        syntymaAika = Mjonot.erota(sb, '|', syntymaAika);
+        emonNimi = Mjonot.erota(sb, '|', emonNimi);
+        emonRekisteriNro = Mjonot.erota(sb, '|', emonRekisteriNro);
+        isanNimi = Mjonot.erota(sb, '|', isanNimi);
+        isanRekisteriNro = Mjonot.erota(sb, '|', isanRekisteriNro);
+        myyntipaiva = Mjonot.erota(sb, '|', myyntipaiva);
+        viimeisinRokotus = Mjonot.erota(sb, '|', viimeisinRokotus);
+        seuraavaRokotus = Mjonot.erota(sb, '|', seuraavaRokotus);
+        lisatiedot = Mjonot.erota(sb, '|', lisatiedot);
+    }
+    
+    
+    @Override
+    public boolean equals(Object kissa) {
+        if ( kissa == null ) return false;
+        return this.toString().equals(kissa.toString());
+    }
+
+
+    @Override
+    public int hashCode() {
+        return kissantunnusNro;
     }
 
 
