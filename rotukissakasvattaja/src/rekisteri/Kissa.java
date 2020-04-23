@@ -1,14 +1,13 @@
-/**
- * 
- */
 package rekisteri;
 
-import java.io.*;
+import static kanta.RekisterinumeroTarkistus.arvoRekNro;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Comparator;
 import fi.jyu.mit.ohj2.Mjonot;
-
-import static rekisteri.Rekisterinumero.*;
-import static rekisteri.Omistajanumero.*;
+import kanta.RekisterinumeroTarkistus;
+import kanta.Tietue;
 
 /**
  * Rekisterin kissa, joka mm. osaa huolehtia tunnusnumeroistaan.
@@ -17,12 +16,12 @@ import static rekisteri.Omistajanumero.*;
  * - Osaa muuttaa 1|Kissakaveri Sadepilvi|-merkkijonon| kissan tiedoiksi                               
  * - Osaa antaa merkkijonona i:n kentän tiedot       
  * - Osaa laittaa merkkijonon i:neksi kentäksi      
- * - Osaa ilmoittaa kissasta, jonka seuraava rokotus on pian ajankohtainen  //TODO: tee tämä 
+ * - Osaa ilmoittaa kissasta, jonka seuraava rokotus on pian ajankohtainen  
  * @author annik
- * @version 1.4.2020
+ * @version 22.4.2020
  * 
  */
-public class Kissa {
+public class Kissa implements Cloneable, Tietue {
     
     private int        kissantunnusNro;
     private int        omistajantunnusNro;
@@ -43,28 +42,263 @@ public class Kissa {
     private String     lisatiedot    = "";
 
     private static int seuraavaNro    = 1;
+    private static int seuraavaNroOmistajalle = 1;
     
-    /**
-     * @return kissan nimi
-     * @example
-     * <pre name="test">
-     *   Kissa sadepilvi = new Kissa();
-     *   sadepilvi.taytaKissaTiedoilla();
-     *   sadepilvi.getNimi() =R= "Kissakaveri Sadepilvi";
-     * </pre>
-     */
-    public String getNimi() {
-        return nimi;
-    }
     
-    /**
-     * Alustetaan kissa. Toistaiseksi ei muuta.
-     */
-    public Kissa() {
-        // Vielä ei mitään
-    }
+    /** 
+     * Kissojen vertailija 
+     */ 
+    public static class Vertailija implements Comparator<Kissa> { 
+        private int k;
+         
+        @SuppressWarnings("javadoc") 
+        public Vertailija(int k) { 
+            this.k = k; 
+        } 
+         
+        @Override 
+        public int compare(Kissa kissa1, Kissa kissa2) {
+            return kissa1.getAvain(k).compareToIgnoreCase(kissa2.getAvain(k));
+         
+        }  
+    } 
     
 
+    /** 
+     * Antaa k:n kentän sisällön merkkijonona 
+     * @param k monennenko kentän sisältö palautetaan 
+     * @return kentän sisältö merkkijonona 
+     */ 
+    public String getAvain(int k) { 
+        switch ( k ) { 
+        case 0: return "" + kissantunnusNro; 
+        case 1: return "" + omistajantunnusNro;
+        case 2: return "" + nimi.toUpperCase(); 
+        case 3: return "" + rotu;  
+        case 4: return "" + emsKoodi; 
+        case 5: return "" + vari; 
+        case 6: return "" + rekisteriNro; 
+        case 7: return "" + sukupuoli; 
+        case 8: return "" + syntymaAika; 
+        case 9: return "" + emonNimi; 
+        case 10: return "" + emonRekisteriNro; 
+        case 11: return "" + isanNimi; 
+        case 12: return "" + isanRekisteriNro; 
+        case 13: return "" + myyntipaiva;
+        case 14: return "" + viimeisinRokotus; 
+        case 15: return "" + seuraavaRokotus; 
+        case 16: return "" + lisatiedot;
+        default: return "Tyhjä"; 
+        } 
+    } 
+    
+    
+    /**
+     * Palauttaa kissan kenttien lukumäärän
+     * @return kenttien lukumäärä
+     */
+    @Override
+    public int getKenttia() {
+        return 17;
+    }
+
+
+    /**
+     * Eka kenttä joka on mielekäs kysyttäväksi eli nimi
+     * @return ekan kentän indeksi
+     */
+    @Override
+    public int ekaKentta() {
+        return 2;
+    }
+    
+    
+    /**
+     * Alustetaan kissan merkkijono-attribuutti tyhjiksi jonoiksi ja tunnusnro = 0.
+     */
+    public Kissa() {
+    }
+    
+    
+  /**
+  * @return kissan nimi
+  * @example
+  * <pre name="test">
+  *   Kissa sadepilvi = new Kissa();
+  *   sadepilvi.taytaKissaTiedoilla();
+  *   sadepilvi.getNimi() =R= "Kissakaveri Sadepilvi";
+  * </pre>
+  */
+ public String getNimi() {
+     return nimi;
+ }
+ 
+ 
+ /**
+  * @return Kissan viimeisin rokotus
+  */
+ public String getViimeisinRokotus() {
+     return viimeisinRokotus;
+ }
+ 
+ 
+ /**
+ * @return Kissan seuraava rokotus
+ */
+public String getSeuraavaRokotus() {
+     return seuraavaRokotus;
+ }
+
+
+ /**
+  * Antaa k:n kentän sisällön merkkijonona
+  * @param k monenenko kentän sisältö palautetaan
+  * @return kentän sisältö merkkijonona
+  */
+ @Override
+public String anna(int k) {
+     switch ( k ) {
+     case 0: return "" + kissantunnusNro;
+     case 1: return "" + omistajantunnusNro;
+     case 2: return "" + nimi;
+     case 3: return "" + rotu;
+     case 4: return "" + emsKoodi;
+     case 5: return "" + vari;
+     case 6: return "" + rekisteriNro;
+     case 7: return "" + sukupuoli;
+     case 8: return "" + syntymaAika;
+     case 9: return "" + emonNimi;
+     case 10: return "" + emonRekisteriNro;
+     case 11: return "" + isanNimi;
+     case 12: return "" + isanRekisteriNro;
+     case 13: return "" + myyntipaiva;
+     case 14: return "" + viimeisinRokotus;
+     case 15: return "" + seuraavaRokotus;
+     case 16: return "" + lisatiedot;
+     default: return "Tyhjä";
+     }
+ }
+ 
+ 
+ /**
+  * Asettaa k:n kentän arvoksi parametrina tuodun merkkijonon arvon
+  * @param k kuinka monennen kentän arvo asetetaan
+  * @param jono jonoa joka asetetaan kentän arvoksi
+  * @return null jos asettaminen onnistuu.
+  * @example
+  * <pre name="test">
+  *   Kissa kissa = new Kissa();
+  *   kissa.aseta(1,"Sadepilvi") === null; 
+  *   kissa.aseta(7,"naaras") === null;
+  *   kissa.aseta(6, "FI KS NO 123456") === "Rekisterinumero liian lyhyt";
+  *   kissa.aseta(6, "FI KS NO 1234567") === null;
+  *   kissa.aseta(10, "FI KS NO 223456") === "Rekisterinumero liian lyhyt";
+  *   kissa.aseta(12, "FI KS NO 323456") === "Rekisterinumero liian lyhyt";
+  *   kissa.aseta(10, "FI KS NO 2234567") === null;
+  *   kissa.aseta(12, "FI KS NO 3234567") === null;
+  * </pre>
+  */
+ @Override
+public String aseta(int k, String jono) {
+     String tjono = jono.trim();
+     StringBuffer sb = new StringBuffer(tjono);
+     switch ( k ) {
+     case 0:
+         setKissanTunnusNro(Mjonot.erota(sb, '§', getKissanTunnusNro()));
+         return null;
+     case 1:
+         omistajantunnusNro = (Mjonot.erota(sb, '§', getOmistajanTunnusNro()));
+         return null;    
+     case 2:
+         nimi = tjono;
+         return null;
+     case 3:
+         rotu = tjono;
+         return null;
+     case 4:
+         emsKoodi = tjono;
+         return null;
+     case 5:
+         vari = tjono;
+         return null;
+     case 6:
+         RekisterinumeroTarkistus reknro = new RekisterinumeroTarkistus();
+         String virhe = reknro.tarkista(jono);
+         if ( virhe != null ) return virhe;
+         rekisteriNro = tjono;
+         return null;
+     case 7:
+         sukupuoli = tjono;
+         return null;
+     case 8:
+         syntymaAika = tjono;
+         return null;
+     case 9:
+         emonNimi = tjono;
+         return null;
+     case 10:
+         RekisterinumeroTarkistus reknro2 = new RekisterinumeroTarkistus();
+         String virhe2 = reknro2.tarkista(jono);
+         if ( virhe2 != null ) return virhe2;
+         emonRekisteriNro = tjono;
+         return null;
+     case 11:
+         isanNimi = tjono;
+         return null;
+     case 12:
+         RekisterinumeroTarkistus reknro3 = new RekisterinumeroTarkistus();
+         String virhe3 = reknro3.tarkista(jono);
+         if ( virhe3 != null ) return virhe3;
+         isanRekisteriNro = tjono;
+         return null;
+     case 13:
+         myyntipaiva = tjono;
+         return null;
+     case 14:
+         viimeisinRokotus = tjono;
+         return null;
+     case 15:      
+         seuraavaRokotus = tjono;
+         return null;
+     case 16:
+         lisatiedot = Mjonot.erota(sb, '§', lisatiedot);
+         return null;   
+     default:
+         return "Tyhjä";
+     }
+ }
+ 
+ 
+ /**
+  * Palauttaa k:tta kissan kenttää vastaavan kysymyksen
+  * @param k kuinka monennen kentän kysymys palautetaan (0-alkuinen)
+  * @return k:netta kenttää vastaava kysymys
+  */
+ @Override
+public String getKysymys(int k) {
+     switch ( k ) {
+     case 0: return "Kissan Tunnusnro";
+     case 1: return "Omistajan Tunnusnro";
+     case 2: return "Kissan nimi";
+     case 3: return "Rotu";
+     case 4: return "EMS-koodi";
+     case 5: return "Väri";
+     case 6: return "Rekisterinro";
+     case 7: return "Sukupuoli";
+     case 8: return "Syntymäaika";
+     case 9: return "Emon nimi";
+     case 10: return "Emon rekisterinro";
+     case 11: return "Isän nimi";
+     case 12: return "Isän rekisterinro";
+     case 13: return "Myyntipäivä";
+     case 14: return "Viimeisin rokotus";
+     case 15: return "Seuraava rokotus";
+     case 16: return "Lisätiedot";
+     default: return "Tyhjä";
+     }
+ }
+
+ 
     /**
      * Alustetaan tietyn kissan omistaja.  
      * @param omistajantunnusNro omistajan viitenumero 
@@ -76,11 +310,10 @@ public class Kissa {
 
     /**
      * Apumetodi, jolla saadaan täytettyä testiarvot kissalle. 
-     * @param omistajanNro viite omistajaan, jonka kissasta on kyse
      * @param arvottuRekNro rekisterinumero joka arvotaan kissalle
      */
-    public void taytaKissaTiedoilla (int omistajanNro, String arvottuRekNro) {
-        omistajantunnusNro = omistajanNro;
+    public void taytaKissaTiedoilla (String arvottuRekNro) {
+        omistajantunnusNro = getOmistajanTunnusNro();
         nimi = "Kissakaveri Sadepilvi"; 
         rekisteriNro = "FI KS NO "+ arvottuRekNro;  
         rotu = "Ragdoll";
@@ -99,6 +332,7 @@ public class Kissa {
         
     }
     
+    
     /**
      * Apumetodi, jolla saadaan täytettyä testiarvot kissalle.
      * Rekisterinumero arvotaan, jotta kahdella kissalla ei olisi
@@ -106,15 +340,10 @@ public class Kissa {
      */
     public void taytaKissaTiedoilla() {
         String arvottuRekNro = arvoRekNro();
-        int omistajanNro = arvoOmistajaNro(); 
-        taytaKissaTiedoilla(omistajanNro, arvottuRekNro);
+        taytaKissaTiedoilla(arvottuRekNro);
         
     }
 
-    
-    
-    //TODO: Tee huomautukset-ikkuna, johon tulee teksti tietyn kissan rokotetarpeesta
-    //TODO: Tähän liittyen tee kuluvan päiväyksen haku 
     
     /**
      * Tulostetaan kissan tiedot
@@ -143,6 +372,7 @@ public class Kissa {
         
     }
     
+    
     /**
      * Tulostetaan kissan tiedot
      * @param os tietovirta johon tulostetaan
@@ -150,6 +380,7 @@ public class Kissa {
     public void tulosta(OutputStream os) {
         tulosta(new PrintStream(os));
     }
+    
     
     /**
      * Antaa kissalle seuraavan tunnusnumeron.
@@ -187,7 +418,7 @@ public class Kissa {
      * seuraava numero on aina suurempi kuin tähän mennessä suurin.
      * @param kissanr asetettava tunnusnumero
      */
-    private void setKissanTunnusNro(int kissanr) {
+    public void setKissanTunnusNro(int kissanr) {
         kissantunnusNro = kissanr;
         if (kissantunnusNro >= seuraavaNro) seuraavaNro = kissantunnusNro + 1;
     }
@@ -203,35 +434,37 @@ public class Kissa {
     
     
     /**
+     * Asettaa omistajan tunnusnumeron ja samalla varmistaa että
+     * seuraava numero on aina suurempi kuin tähän mennessä suurin.
+     * @param omistajanr asetettava tunnusnumero
+     */
+    public void setOmistajanTunnusNro(int omistajanr) {
+        omistajantunnusNro = omistajanr;
+        if (omistajantunnusNro >= seuraavaNroOmistajalle) seuraavaNroOmistajalle = omistajantunnusNro + 1;
+    } 
+    
+    
+    /**
      * Palauttaa kissan tiedot merkkijonona jonka voi tallentaa tiedostoon.
      * @return kissa tolppaeroteltuna merkkijonona 
      * @example
      * <pre name="test">
-     *   Kissa kissa = new Kissa();
-     *   kissa.parse("   1  |  1  | Kissakaveri Sadepilvi");
-     *   kissa.toString().startsWith("1|1|Kissakaveri Sadepilvi|") === true; // on enemmänkin kuin 3 kenttää, siksi loppu |
+     Kissa kissa = new Kissa();
+//     *   kissa.parse("   1  |  1  | Kissakaveri Sadepilvi");
+//     *   kissa.toString().startsWith("1|1|Kissakaveri Sadepilvi|") === true; // on enemmänkin kuin 3 kenttää, siksi loppu |
      * </pre>  
      */
+
     @Override
     public String toString() {
-        return "" +
-                getKissanTunnusNro() + "|" +
-                getOmistajanTunnusNro() + "|" +
-                nimi + "|" +
-                rotu + "|" +
-                emsKoodi + "|" +
-                vari + "|" +
-                rekisteriNro + "|" +
-                sukupuoli + "|" +
-                syntymaAika + "|" +
-                emonNimi + "|" +
-                emonRekisteriNro + "|" +
-                isanNimi + "|" +
-                isanRekisteriNro + "|" +
-                myyntipaiva + "|" +
-                viimeisinRokotus + "|" +
-                seuraavaRokotus + "|" +
-                lisatiedot;
+        StringBuffer sb = new StringBuffer("");
+        String erotin = "";
+        for (int k = 0; k < getKenttia(); k++) {
+            sb.append(erotin);
+            sb.append(anna(k));
+            erotin = "|";
+        }
+        return sb.toString();
     }
     
     
@@ -256,30 +489,64 @@ public class Kissa {
      */
     public void parse(String rivi) {
         StringBuffer sb = new StringBuffer(rivi);
-        setKissanTunnusNro(Mjonot.erota(sb, '|', getKissanTunnusNro()));
-        omistajantunnusNro = Mjonot.erota(sb, '|', getOmistajanTunnusNro());
-        nimi = Mjonot.erota(sb, '|', nimi);
-        rotu = Mjonot.erota(sb, '|', rotu);
-        emsKoodi = Mjonot.erota(sb, '|', emsKoodi);
-        vari = Mjonot.erota(sb, '|', vari);
-        rekisteriNro = Mjonot.erota(sb, '|', rekisteriNro);
-        sukupuoli = Mjonot.erota(sb, '|', sukupuoli);
-        syntymaAika = Mjonot.erota(sb, '|', syntymaAika);
-        emonNimi = Mjonot.erota(sb, '|', emonNimi);
-        emonRekisteriNro = Mjonot.erota(sb, '|', emonRekisteriNro);
-        isanNimi = Mjonot.erota(sb, '|', isanNimi);
-        isanRekisteriNro = Mjonot.erota(sb, '|', isanRekisteriNro);
-        myyntipaiva = Mjonot.erota(sb, '|', myyntipaiva);
-        viimeisinRokotus = Mjonot.erota(sb, '|', viimeisinRokotus);
-        seuraavaRokotus = Mjonot.erota(sb, '|', seuraavaRokotus);
-        lisatiedot = Mjonot.erota(sb, '|', lisatiedot);
+        for (int k = 0; k < getKenttia(); k++)
+            aseta(k, Mjonot.erota(sb, '|'));
     }
     
     
+    /**
+     * Tehdään identtinen klooni kissasta
+     * @return Object kloonattu kissa
+     * @example
+     * <pre name="test">
+     * #THROWS CloneNotSupportedException 
+     *   Kissa kissa = new Kissa();
+     *   kissa.parse("   3  | Kissakaveri Sadepilvi  | Ragdoll");
+     *   Kissa kopio = kissa.clone();
+     *   kopio.toString() === kissa.toString();
+     *   kissa.parse("   4  | Kissakaveri April   | Ragdoll");
+     *   kopio.toString().equals(kissa.toString()) === false;
+     * </pre>
+     */
+    @Override
+    public Kissa clone() throws CloneNotSupportedException {
+        Kissa uusi;
+        uusi = (Kissa) super.clone();
+        return uusi;
+    }
+    
+    
+    /**
+     * Tutkii onko kissan tiedot samat kuin parametrina tuodun kissan tiedot
+     * @param kissa kissa johon verrataan
+     * @return true jos kaikki tiedot samat, false muuten
+     * @example
+     * <pre name="test">
+     *   Kissa kissa1 = new Kissa();
+     *   kissa1.parse("   1  |  Kissakaveri Sadepilvi   | Ragdoll");
+     *   Kissa kissa2 = new Kissa();
+     *   kissa2.parse("   1  |  Kissakaveri Sadepilvi   | Ragdoll");
+     *   Kissa kissa3 = new Kissa();
+     *   kissa3.parse("   2  |  Kissakaveri Saniainen   | Ragdoll");
+     *   
+     *   kissa1.equals(kissa2) === true;
+     *   kissa2.equals(kissa1) === true;
+     *   kissa1.equals(kissa3) === false;
+     *   kissa3.equals(kissa2) === false;
+     * </pre>
+     */
+    public boolean equals(Kissa kissa) {
+        if ( kissa == null ) return false;
+        for (int k = 0; k < getKenttia(); k++)
+            if ( !anna(k).equals(kissa.anna(k)) ) return false;
+        return true;
+    }
+        
+    
     @Override
     public boolean equals(Object kissa) {
-        if ( kissa == null ) return false;
-        return this.toString().equals(kissa.toString());
+        if ( kissa instanceof Kissa ) return equals((Kissa)kissa);
+        return false;
     }
 
 
@@ -304,7 +571,7 @@ public class Kissa {
 
         sadepilvi2.taytaKissaTiedoilla();
         sadepilvi2.tulosta(System.out);
-    
+        
     }
 
 }

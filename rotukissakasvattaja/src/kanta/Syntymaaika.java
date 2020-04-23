@@ -1,12 +1,13 @@
-package rekisteri;
+package kanta;
 
 /**
  * Luokka omistajan syntymäajan arpomiseksi
  * @author annik
- * @version 9.3.2020
+ * @version 7.4.2020
  *
  */
 public class Syntymaaika {
+    
     
     /**
      * Arvotaan satunnainen kokonaisluku välille [ala,yla]

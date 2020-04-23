@@ -2,12 +2,10 @@ package fxRotukissakasvattaja;
 
 import fi.jyu.mit.fxgui.ModalController;
 import fi.jyu.mit.fxgui.ModalControllerInterface;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.scene.layout.BorderPane;
-import javafx.fxml.FXMLLoader;
+
 
 /**
  * Käynnistetään ohjelma. Käyttäjä kirjautuu ohjelmaan syöttämällä kasvattajanimensä.

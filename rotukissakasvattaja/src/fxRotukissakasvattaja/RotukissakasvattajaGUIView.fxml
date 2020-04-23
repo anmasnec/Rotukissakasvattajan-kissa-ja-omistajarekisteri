@@ -2,6 +2,7 @@
 
 <?import fi.jyu.mit.fxgui.ComboBoxChooser?>
 <?import fi.jyu.mit.fxgui.ListChooser?>
+<?import fi.jyu.mit.fxgui.StringGrid?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -23,9 +24,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="668.0" prefWidth="1067.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRotukissakasvattaja.RotukissakasvattajaGUIController">
+<BorderPane prefHeight="697.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRotukissakasvattaja.RotukissakasvattajaGUIController">
    <bottom>
-      <HBox prefHeight="100.0" prefWidth="1045.0" spacing="10.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="100.0" prefWidth="1045.0" spacing="10.0" style="-fx-background-color: #E6E6FA;" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </BorderPane.margin>
@@ -47,7 +48,7 @@
                   <Button mnemonicParsing="false" onAction="#handlePoistaKissa" text="Poista kissa" />
                </children>
             </HBox>
-            <Button mnemonicParsing="false" onAction="#handlePoistaOmistaja" prefHeight="25.0" prefWidth="135.0" text="Poista omistaja" />
+            <Button mnemonicParsing="false" onAction="#handlePoistaOmistaja" prefHeight="25.0" prefWidth="101.0" text="Poista omistaja" />
          </children>
       </HBox>
    </bottom>
@@ -111,7 +112,7 @@
                                  <children>
                                     <Label alignment="CENTER" prefHeight="18.0" prefWidth="161.0" text="Hakuehto" />
                                     <TextField fx:id="hakuehto" onKeyReleased="#handleHakuehto" prefHeight="31.0" prefWidth="168.0" />
-                                    <ComboBoxChooser fx:id="cbKentat" onAction="#handleHakuehto" prefHeight="25.0" prefWidth="169.0" rivit="Kissan nimi&#10;Rotu&#10;EMS-koodi&#10;Väri&#10;Rekisterinumero&#10;Sukupuoli&#10;Kissan syntymäaika&#10;Emon nimi&#10;Emon rekisterinumero&#10;Isän nimi&#10;Isän rekisterinumero&#10;Myyntipäivä&#10;Viimeisin rokotus&#10;Seuraava rokotus&#10;Omistajan nimi&#10;Katuosoite&#10;Postinumero&#10;Paikkakunta&#10;Puhelinnumero&#10;Omistajan syntymäaika&#10;&#10;&#10;" />
+                                    <ComboBoxChooser fx:id="cbKentat" onAction="#handleHakuehto" prefHeight="25.0" prefWidth="169.0" rivit="Kissan nimi&#10;Rotu&#10;EMS-koodi&#10;Väri&#10;Rekisterinumero&#10;Sukupuoli&#10;Kissan syntymäaika&#10;Emon nimi&#10;Emon rekisterinumero&#10;Isän nimi&#10;Isän rekisterinumero&#10;Myyntipäivä&#10;Viimeisin rokotus&#10;Seuraava rokotus&#10;Lisätiedot&#10;" />
                                  </children>
                               </VBox>
                            </children>
@@ -122,7 +123,7 @@
                      <children>
                         <Pane prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <ListChooser fx:id="chooserKissat" maxHeight="1.7976931348623157E308" layoutX="-1.0" layoutY="22.0" prefHeight="272.0" prefWidth="170.0" rivit="Kissakaveri Sadepilvi&#10;Kissakaveri Saniainen&#10;Kissakaveri Sateenkaari&#10;Kissakaveri April&#10;Kissakaveri Peter Pan&#10;Kissakaveri Poutapilvi&#10;Kissakaveri Selma&#10;Kissakaveri Urho&#10;Sade Pilvinen&#10;Kukka Metsälä&#10;Kari Luminen&#10;Lilja Lehtinen&#10;Pena Kissala" />
+                              <ListChooser fx:id="chooserKissat" layoutX="-1.0" layoutY="22.0" maxHeight="1.7976931348623157E308" prefHeight="272.0" prefWidth="170.0" rivit="Kissakaveri Sadepilvi&#10;Kissakaveri Saniainen&#10;Kissakaveri Sateenkaari&#10;Kissakaveri April&#10;Kissakaveri Peter Pan&#10;Kissakaveri Poutapilvi&#10;Kissakaveri Selma&#10;Kissakaveri Urho&#10;Sade Pilvinen&#10;Kukka Metsälä&#10;Kari Luminen&#10;Lilja Lehtinen&#10;Pena Kissala" />
                            </children>
                         </Pane>
                      </children>
@@ -133,13 +134,14 @@
       </BorderPane>
    </left>
    <center>
-      <ScrollPane fx:id="panelKissa" fitToWidth="true" prefHeight="523.0" prefWidth="442.0" BorderPane.alignment="CENTER">
+   <Label text="Kissan tiedot" />
+      <ScrollPane fx:id="panelKissa" fitToWidth="true" pannable="true" prefHeight="552.0" prefWidth="400.0" style="-fx-border-color: #E6E6FA;" BorderPane.alignment="CENTER">
          <content>
-            <GridPane prefHeight="461.0" prefWidth="332.0">
+            <GridPane fx:id="gridKissa" hgap="10.0">
               <columnConstraints>
-                <ColumnConstraints maxWidth="47.0" minWidth="0.0" prefWidth="35.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.0" minWidth="0.0" prefWidth="85.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="237.0" minWidth="10.0" prefWidth="105.0" />
+                <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="NEVER" minWidth="10.0" />
+				<ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                  <ColumnConstraints />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -190,46 +192,34 @@
                   <TextArea GridPane.columnIndex="2" GridPane.rowIndex="13" />
                   <TextArea text="Myyntiin" GridPane.columnIndex="2" GridPane.rowIndex="14" />
                </children>
+				<opaqueInsets>
+				<Insets left="10.0" top="10.0" />
+				</opaqueInsets>
+				<padding>
+				<Insets left="10.0" right="10.0" top="10.0" />
+				</padding>
             </GridPane>
          </content>
       </ScrollPane>
    </center>
    <right>
-      <BorderPane prefHeight="522.0" prefWidth="427.0" BorderPane.alignment="CENTER">
+      <BorderPane fx:id="panelOmistaja" prefHeight="522.0" prefWidth="427.0" BorderPane.alignment="CENTER">
          <bottom>
-            <TextArea prefHeight="148.0" prefWidth="427.0" text="Huomautukset:&#10;" BorderPane.alignment="CENTER" />
+            <TextArea fx:id="Huomautukset" prefHeight="148.0" text="Huomautukset:&#10;" BorderPane.alignment="CENTER" />
          </bottom>
          <center>
-            <GridPane prefHeight="387.0" prefWidth="427.0" BorderPane.alignment="CENTER">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="137.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="308.0" minWidth="10.0" prefWidth="288.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label alignment="CENTER" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="83.0" text="Omistajan nimi" />
-                  <Label alignment="CENTER" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="61.0" text="Katuosoite" GridPane.rowIndex="1" />
-                  <Label alignment="CENTER" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="73.0" text="Postinumero" GridPane.rowIndex="2" />
-                  <Label alignment="CENTER" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="65.0" text="Paikkakunta" GridPane.rowIndex="3" />
-                  <Label alignment="CENTER" contentDisplay="RIGHT" text="Puhelinnumero" GridPane.rowIndex="4" />
-                  <Label alignment="CENTER" contentDisplay="RIGHT" text="Omistajan syntymäaika" GridPane.rowIndex="5" />
-                  <Label alignment="CENTER" contentDisplay="RIGHT" text="Lisätiedot" GridPane.rowIndex="6" />
-                  <TextArea text="Sade Pilvinen" GridPane.columnIndex="1" />
-                  <TextArea prefHeight="25.0" prefWidth="266.0" text="Pilvitie 2 B 16" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextArea prefHeight="25.0" prefWidth="273.0" text="97612" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextArea text="Pilvelä" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextArea text="0601456387" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextArea text="05.06.1991" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextArea GridPane.columnIndex="1" GridPane.rowIndex="6" />
-               </children>
+            <GridPane fx:id="gridOmistaja" prefHeight="387.0" prefWidth="427.0" BorderPane.alignment="CENTER">
+            <StringGrid fx:id="stringGridOmistaja" editable="true" prefHeight="375.0" prefWidth="400.0" />
+            <padding>
+			<Insets left="15.0" right="15.0" />
+			</padding>
+               <columnConstraints>
+               <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="NEVER" minWidth="15.0" />
+               <ColumnConstraints hgrow="ALWAYS" minWidth="15.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+               </rowConstraints>
             </GridPane>
          </center></BorderPane>
    </right>

@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import fi.jyu.mit.ohj2.WildChars;
+
 
 /**
  * Rekisterin kissat joka osaa mm. lisätä uuden kissan.
@@ -18,25 +20,31 @@ import java.util.*;
 * - Etsii ja lajittelee
 * Avustajaluokka: Kissa
  * @author annik
- * @version 16.3.2020
+ * @version 20.4.2020
  * 
  */
 public class Kissat implements Iterable <Kissa> {
     
     private boolean muutettu = false;
-    private int lkm = 0;
     private String kasvattajaNimi = "";
     private String tiedostonPerusNimi = "kissat";
    
     /** Lista kissoista */
-    private final Collection<Kissa> alkiot = new ArrayList<Kissa>();
+    private List<Kissa> alkiot = new ArrayList<Kissa>();
     
     /**
      * Oletusmuodostaja; kissojen alustaminen
      */
     public Kissat() {
     }
-
+    
+    /**
+     * @return listan kissoista
+     */
+    public List<Kissa> getKissatAlkiot() {
+        return alkiot;
+    }
+    
     
     /**
      * Lisää uuden kissan tietorakenteeseen. Ottaa kissan omistukseensa.
@@ -48,7 +56,46 @@ public class Kissat implements Iterable <Kissa> {
     }
 
 
-
+    /**
+     * Korvaa kissan tietorakenteessa.  Ottaa kissan omistukseensa.
+     * Etsitään samalla tunnusnumerolla oleva kissa.  Jos ei löydy,
+     * niin lisätään uutena kissana.
+     * @param kissa lisättävän kissan viite.  Huom tietorakenne muuttuu omistajaksi
+     * @throws SailoException jos tietorakenne on jo täynnä
+     * <pre name="test">
+     * #THROWS SailoException,CloneNotSupportedException
+     * #PACKAGEIMPORT
+     * Kissat kissat = new Kissat();
+     * Kissa sadepilvi1 = new Kissa(), sadepilvi2 = new Kissa();
+     * sadepilvi1.rekisteroi(); sadepilvi2.rekisteroi();
+     * kissat.getLkm() === 0;
+     * kissat.korvaaTaiLisaa(sadepilvi1); kissat.getLkm() === 1;
+     * kissat.korvaaTaiLisaa(sadepilvi2); kissat.getLkm() === 2;
+     * Kissa sadepilvi3 = sadepilvi1.clone();
+     * sadepilvi3.aseta(3,"kkk");
+     * Iterator<Kissa> it = kissat.iterator();
+     * it.next() == sadepilvi1 === true;
+     * kissat.korvaaTaiLisaa(sadepilvi3); kissat.getLkm() === 2;
+     * it = kissat.iterator();
+     * Kissa k0 = it.next();
+     * k0 === sadepilvi3;
+     * k0 == sadepilvi3 === true;
+     * k0 == sadepilvi1 === false;
+     * </pre>
+     */
+    public void korvaaTaiLisaa(Kissa kissa) throws SailoException  {
+        int id = kissa.getKissanTunnusNro();
+        for (int i = 0; i < getLkm(); i++) {
+            if (alkiot.get(i).getKissanTunnusNro() == id) {
+                alkiot.set(i, kissa);
+                muutettu = true;
+                return;
+            }
+        }
+        lisaa(kissa);
+    }
+    
+    
     /**
      * Palauttaa viitteen i:teen kissaan.
      * @param i monennenko kissan viite halutaan
@@ -62,6 +109,34 @@ public class Kissat implements Iterable <Kissa> {
     }
 
     
+    /** 
+     * Poistaa kissan jolla on valittu tunnusnumero  
+     * @param id poistettavan kissan tunnusnumero 
+     * @return 1 jos poistettiin, 0 jos ei löydy 
+     * @example 
+     * <pre name="test"> 
+     * Kissat kissat = new Kissat(); 
+     * Kissa sadepilvi1 = new Kissa(), sadepilvi2 = new Kissa(), sadepilvi3 = new Kissa(); 
+     * sadepilvi1.rekisteroi(); sadepilvi2.rekisteroi(); sadepilvi3.rekisteroi(); 
+     * int id1 = sadepilvi1.getKissanTunnusNro(); 
+     * kissat.lisaa(sadepilvi1); kissat.lisaa(sadepilvi2); kissat.lisaa(sadepilvi3); 
+     * kissat.poista(id1+1) === 1; 
+     * kissat.annaId(id1+1) === null; kissat.getLkm() === 2; 
+     * kissat.poista(id1) === 1; kissat.getLkm() === 1; 
+     * </pre> 
+     *  
+     */ 
+    public int poista(int id) { 
+         
+        Kissa ind = etsiId(id); 
+       
+        if (ind == null) return 0;
+ 
+        alkiot.removeIf(e -> e.equals(ind));
+        muutettu =true;
+        return 1;
+ 
+    } 
 
 
     /**
@@ -83,25 +158,28 @@ public class Kissat implements Iterable <Kissa> {
      *  File ftied = new File(tiedNimi+".dat");
      *  File dir = new File(hakemisto);
      *  dir.mkdir();
-     *  kissat.lueTiedostosta(tiedNimi); 
+     *  ftied.delete();
+     *  kissat.lueTiedostosta(tiedNimi); #THROWS SailoException
      *  kissat.lisaa(sadepilvi1);
      *  kissat.lisaa(sadepilvi2);
      *  kissat.tallenna();
      *  kissat = new Kissat();     // Poistetaan vanhat luomalla uusi
      *  kissat.lueTiedostosta(tiedNimi); // johon ladataan tiedot tiedostosta.
      *  Iterator<Kissa> i = kissat.iterator();
-     *  i.next().getNimi() === sadepilvi1.getNimi();
+     *  i.next() === sadepilvi1;
+     *  i.next() === sadepilvi2;
+     *  i.hasNext() === false;
      *  kissat.lisaa(sadepilvi2);
      *  kissat.tallenna();
      *  ftied.delete() === true;
      *  File fbak = new File(tiedNimi+".bak");
+     *  fbak.delete() === true;
+     *  dir.delete() === true;
      * </pre>
      */
     public void lueTiedostosta(String tied) throws SailoException {
         setTiedostonPerusNimi(tied);
         try ( BufferedReader fi = new BufferedReader(new FileReader(getTiedostonNimi())) ) {
-//            kasvattajaNimi = fi.readLine();
-//            if ( kasvattajaNimi == null ) throw new SailoException("Kasvattajan nimi puuttuu");
             String rivi = "";
         
 
@@ -120,9 +198,8 @@ public class Kissat implements Iterable <Kissa> {
         }
     }
     
-    
 
-    
+ 
     /**
      * Palauttaa kasvattajanimen 
      * @return Kasvattajanimi merkkijonona
@@ -194,17 +271,15 @@ public class Kissat implements Iterable <Kissa> {
 
         File fbak = new File(getBakNimi());
         File ftied = new File(getTiedostonNimi());
-        fbak.delete(); // if .. System.err.println("Ei voi tuhota");
-        ftied.renameTo(fbak); // if .. System.err.println("Ei voi nimetä");
+        fbak.delete(); 
+        ftied.renameTo(fbak); 
 
         try ( PrintWriter fo = new PrintWriter(new FileWriter(new File(getTiedostonNimi()).getCanonicalPath())) ) {
-//            fo.println(getKasvattajaNimi());
-//            fo.println(alkiot);
+           
             for (Kissa kissa : alkiot) {
                 fo.println(kissa.toString());
             }
-            //} catch ( IOException e ) { // ei heitä poikkeusta
-            //  throw new SailoException("Tallettamisessa ongelmia: " + e.getMessage());
+     
         } catch ( FileNotFoundException ex ) {
             throw new SailoException("Tiedosto " + ftied.getName() + " ei aukea");
         } catch ( IOException ex ) {
@@ -215,9 +290,6 @@ public class Kissat implements Iterable <Kissa> {
     }
     
     
-    
-    
-    
     /**
      * Palauttaa rekisterin kissojen lukumäärän
      * @return kissojen lukumäärä
@@ -226,8 +298,7 @@ public class Kissat implements Iterable <Kissa> {
         return alkiot.size();
     }
     
-    
-    
+        
     /**
      * Luokka kissojen iteroimiseksi.
      * @example
@@ -319,8 +390,7 @@ public class Kissat implements Iterable <Kissa> {
     }
 
 
- 
-        
+       
     /**
      * Haetaan kaikki omistajan kissat
      * @param omistajantunnusnro omistajan tunnusnumero jolle kissoja haetaan
@@ -349,17 +419,71 @@ public class Kissat implements Iterable <Kissa> {
      *   Kissa kissa4 = new Kissa(); kissa4.parse("4|4|Kissakaveri April|Ragdoll|RAG a|Sininaamio colourpoint|"); 
      *   Kissa kissa5 = new Kissa(); kissa5.parse("5|5|Kissakaveri Peter Pan|Ragdoll|RAG a 04|Sininaamio mitted|"); 
      *   kissat.lisaa(kissa1); kissat.lisaa(kissa2); kissat.lisaa(kissa3); kissat.lisaa(kissa4); kissat.lisaa(kissa5);
-     *   // TODO: toistaiseksi palauttaa kaikki jäsenet 
      * </pre> 
      */ 
-    @SuppressWarnings("unused")
+   
     public Collection<Kissa> etsi(String hakuehto, int k) { 
-        Collection<Kissa> loytyneet = new ArrayList<Kissa>(); 
+        String ehto = "*"; 
+        if ( hakuehto != null && hakuehto.length() > 0 ) ehto = hakuehto; 
+        int hk = k; 
+        if ( hk < 0 ) hk = 0; // jotta etsii id:n mukaan 
+
+        List<Kissa> loytyneet = new ArrayList<Kissa>(); 
         for (Kissa kissa : this) { 
-            loytyneet.add(kissa);  
+            if (WildChars.onkoSamat(kissa.anna(hk), ehto)) loytyneet.add(kissa);   
         } 
+        Collections.sort(loytyneet, new Kissa.Vertailija(hk)); 
         return loytyneet; 
     }
+    
+    
+    /** 
+     * Etsii kissan id:n perusteella 
+     * @param id tunnusnumero, jonka mukaan etsitään 
+     * @return kissa jolla etsittävä id tai null 
+     * <pre name="test"> 
+     * #THROWS SailoException  
+     * Kissat kissat = new Kissat(); 
+     * Kissa sadepilvi1 = new Kissa(), sadepilvi2 = new Kissa(), sadepilvi3 = new Kissa(); 
+     * sadepilvi1.rekisteroi(); sadepilvi2.rekisteroi(); sadepilvi3.rekisteroi(); 
+     * int id1 = sadepilvi1.getKissanTunnusNro(); 
+     * kissat.lisaa(sadepilvi1); kissat.lisaa(sadepilvi2); kissat.lisaa(sadepilvi3); 
+     * kissat.annaId(id1  ) == sadepilvi1 === true; 
+     * kissat.annaId(id1+1) == sadepilvi2 === true; 
+     * kissat.annaId(id1+2) == sadepilvi3 === true; 
+     * </pre> 
+     */ 
+    public Kissa annaId(int id) { 
+        for (Kissa kissa : this) { 
+            if (id == kissa.getKissanTunnusNro()) return kissa; 
+        } 
+        return null; 
+    } 
+
+
+    /** 
+     * Etsii kissan id:n perusteella 
+     * @param id tunnusnumero, jonka mukaan etsitään 
+     * @return löytyneen kissan indeksi tai virheen
+     * <pre name="test"> 
+     * #THROWS SailoException  
+     * Kissat kissat = new Kissat(); 
+     * Kissa sadepilvi1 = new Kissa(), sadepilvi2 = new Kissa(), sadepilvi3 = new Kissa(); 
+     * sadepilvi1.rekisteroi(); sadepilvi2.rekisteroi(); sadepilvi3.rekisteroi(); 
+     * int id1 = sadepilvi1.getKissanTunnusNro(); 
+     * kissat.lisaa(sadepilvi1); kissat.lisaa(sadepilvi2); kissat.lisaa(sadepilvi3); 
+     * kissat.etsiId(id1) === sadepilvi1;  
+     * </pre> 
+     */ 
+    public Kissa etsiId(int id) { 
+ 
+        for (Kissa kissa : alkiot) {
+            if (kissa.getKissanTunnusNro() == id)
+                return kissa;
+        }
+        throw new NoSuchElementException("Ei ole id mukaista kissaa");
+        
+    } 
     
     
     /**

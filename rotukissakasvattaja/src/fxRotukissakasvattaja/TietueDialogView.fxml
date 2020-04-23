@@ -1,0 +1,92 @@
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@rotukissakasvattaja.css" fx:controller="fxRotukissakasvattaja.TietueDialogController">
+<bottom>
+<VBox BorderPane.alignment="CENTER">
+<children>
+<Label fx:id="labelVirhe" maxWidth="1000.0"/>
+<HBox/>
+<ButtonBar prefHeight="40.0" prefWidth="200.0">
+<buttons>
+<Button defaultButton="true" mnemonicParsing="false" onAction="#handleOK" text="OK"/>
+<Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" text="Cancel"/>
+</buttons>
+<padding>
+<Insets right="10.0"/>
+</padding>
+</ButtonBar>
+</children>
+</VBox>
+</bottom>
+<center>
+<ScrollPane fx:id="panelTietue" fitToWidth="true" pannable="true" BorderPane.alignment="CENTER">
+<content>
+<GridPane fx:id="gridTietue" hgap="10.0">
+<columnConstraints>
+<ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="NEVER" minWidth="10.0"/>
+<ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+</columnConstraints>
+<rowConstraints>
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+</rowConstraints>
+<children>
+<Label text="Kissan nimi" />
+<Label text="Rotu" GridPane.rowIndex="1" />
+<Label text="EMS-koodi" GridPane.rowIndex="2" />
+<Label text="Väri" GridPane.rowIndex="3" />
+<Label text="Rekisterinumero" GridPane.rowIndex="4" />
+<Label text="Sukupuoli" GridPane.rowIndex="5" />
+<Label text="Syntymäaika" GridPane.rowIndex="6" />
+<Label text="Emon nimi" GridPane.rowIndex="7" />
+<Label text="Emon rekisterinumero" GridPane.rowIndex="8" />
+<Label text="Isän nimi" GridPane.rowIndex="9" />
+<Label text="Isän rekisterinumero" GridPane.rowIndex="10" />
+<Label text="Lisätietoja" GridPane.rowIndex="14" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="9" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="10" />
+<TextField GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="14" />
+<Label text="Myyntipäivä" GridPane.rowIndex="11" />
+<Label text="Viimeisin rokotus" GridPane.rowIndex="12" />
+<Label text="Seuraava rokotus" GridPane.rowIndex="13" />
+<TextField GridPane.columnIndex="1" GridPane.rowIndex="11" />
+<TextField GridPane.columnIndex="1" GridPane.rowIndex="12" />
+<TextField GridPane.columnIndex="1" GridPane.rowIndex="13" />
+</children>
+<opaqueInsets>
+<Insets left="10.0" top="10.0"/>
+</opaqueInsets>
+<padding>
+<Insets left="10.0" right="10.0" top="10.0"/>
+</padding>
+</GridPane>
+</content>
+</ScrollPane>
+</center>
+</BorderPane>

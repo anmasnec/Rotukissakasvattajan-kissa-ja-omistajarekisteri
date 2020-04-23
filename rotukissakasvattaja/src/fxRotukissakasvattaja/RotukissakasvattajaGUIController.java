@@ -1,11 +1,14 @@
 package fxRotukissakasvattaja;
 
+import static fxRotukissakasvattaja.TietueDialogController.getFieldId;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.Collection;
 import java.util.List;
@@ -13,19 +16,22 @@ import java.util.List;
 import fi.jyu.mit.fxgui.ComboBoxChooser;
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ModalController;
+import fi.jyu.mit.fxgui.StringGrid;
 import fi.jyu.mit.fxgui.TextAreaOutputStream;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Font;
 import fi.jyu.mit.fxgui.ListChooser;
 import rekisteri.Kissa;
 import rekisteri.Omistaja;
-import rekisteri.Omistajat;
 import rekisteri.Rekisteri;
 import rekisteri.SailoException;
 
@@ -33,7 +39,7 @@ import rekisteri.SailoException;
 /**
  * Luokka Käyttöliittymän käsittelyyn rotukissakasvattajan ohjelmalle.
  * @author annik
- * @version 1.4.2020
+ * @version 22.4.2020
  *
  */
 public class RotukissakasvattajaGUIController implements Initializable {
@@ -42,26 +48,24 @@ public class RotukissakasvattajaGUIController implements Initializable {
     @FXML private ComboBoxChooser<String> cbKentat;
     @FXML private Label labelVirhe;
     @FXML private ScrollPane panelKissa;
+    @FXML private GridPane gridKissa;
     @FXML private ListChooser<Kissa> chooserKissat;
+    @FXML private StringGrid<Omistaja> stringGridOmistaja;
+    @FXML private GridPane gridOmistaja;
     
-   // private String kasvattajanimi = "Kissakaveri";
+    @FXML private TextArea Huomautukset;
+    
+
     
     
     @Override
     public void initialize(URL url, ResourceBundle bundle) {
-        alusta();     
+        alusta();    
     }
 
     
     @FXML private void handleHakuehto() {
-//        String hakukentta = cbKentat.getSelectedText();
-//        String ehto = hakuehto.getText(); 
-//        if ( ehto.isEmpty() )
-//            naytaVirhe(null);
-//        else
-//            naytaVirhe("Vielä ei voi hakea " + hakukentta + ": " + ehto);
-        if ( kissaKohdalla != null )
-            haeKissa(kissaKohdalla.getKissanTunnusNro()); 
+        haeKissa(0);
     }
     
     
@@ -96,20 +100,20 @@ public class RotukissakasvattajaGUIController implements Initializable {
   
     
     @FXML private void handleMuokkaaKissaa() {
-        ModalController.showModal(RotukissakasvattajaGUIController.class.getResource("MuokkaaKissaDialogView.fxml"), "Kissa", null, "");
+        muokkaaKissa(kentta);
     }
     
     @FXML private void handleMuokkaaOmistajaa() {
-        ModalController.showModal(RotukissakasvattajaGUIController.class.getResource("MuokkaaOmistajaDialogView.fxml"), "Omistaja", null, "");
+        muokkaaOmistaja();
     }
       
 
     @FXML private void handlePoistaKissa() {
-        Dialogs.showMessageDialog("Vielä ei ole mahdollista poistaa kissaa.");
+        poistaKissa();
     }
     
     @FXML private void handlePoistaOmistaja() {
-        Dialogs.showMessageDialog("Vielä ei ole mahdollista poistaa omistajaa.");
+        poistaOmistaja();
     }
     
 
@@ -118,14 +122,16 @@ public class RotukissakasvattajaGUIController implements Initializable {
     }
     
 
-
 //===========================================================================================    
 // Tästä eteenpäin ei käyttöliittymään suoraan liittyvää koodia    
     
     private String kasvattajanimi = "Kissakaveri";
     private Rekisteri rekisteri;
     private Kissa kissaKohdalla;
-    private TextArea areaKissa = new TextArea();
+    private TextField edits[];
+    private int kentta = 0; 
+    private static Omistaja apuomistaja = new Omistaja(); 
+    private static Kissa apukissa = new Kissa();
     
     /**
      * Tekee tarvittavat muut alustukset. Vaihdetaan GridPanen tilalle
@@ -133,12 +139,32 @@ public class RotukissakasvattajaGUIController implements Initializable {
      * Alustetaan myös kissalistan kuuntelija.
      */
     protected void alusta() {
-        panelKissa.setContent(areaKissa);
-        areaKissa.setFont(new Font("Courier New", 12));
-        panelKissa.setFitToHeight(true);
-        
         chooserKissat.clear();
         chooserKissat.addSelectionListener(e -> naytaKissa());
+        edits = TietueDialogController.luoKentat(gridKissa, apukissa); 
+        for (TextField edit: edits)  
+            if ( edit != null ) {  
+                edit.setEditable(false);  
+                edit.setOnMouseClicked(e -> { if ( e.getClickCount() > 1 ) muokkaaKissa(getFieldId(e.getSource(),0)); });  
+                edit.focusedProperty().addListener((a,o,n) -> kentta = getFieldId(edit,kentta));
+                edit.setOnKeyPressed( e -> {if ( e.getCode() == KeyCode.F2 ) muokkaaKissa(kentta);});
+                
+                // alustetaan omistajataulukon otsikot 
+                int eka = apuomistaja.ekaKentta(); 
+                int lkm = apuomistaja.getKenttia(); 
+                String[] headings = new String[lkm-eka]; 
+                for (int i=0, k=eka; k<lkm; i++, k++) headings[i] = apuomistaja.getKysymys(k); 
+                stringGridOmistaja.initTable(headings); 
+                stringGridOmistaja.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); 
+                stringGridOmistaja.setEditable(false); 
+                stringGridOmistaja.setPlaceholder(new Label("Ei vielä omistajia")); 
+                stringGridOmistaja.setColumnWidth(-1,95); 
+                 
+
+                
+                stringGridOmistaja.setOnMouseClicked( e -> { if ( e.getClickCount() > 1 ) muokkaaOmistaja(); } );
+                stringGridOmistaja.setOnKeyPressed( e -> {if ( e.getCode() == KeyCode.F2 ) muokkaaOmistaja();}); 
+            }     
     }
     
     private void naytaVirhe(String virhe) {
@@ -157,6 +183,34 @@ public class RotukissakasvattajaGUIController implements Initializable {
         ModalController.getStage(hakuehto).setTitle(title);
     }
     
+//    
+    /**
+     * Hakee kuluvan päivämäärän ja vertaa kissan seuraavan rokotuksen ajankohtaa tähän.
+     * Huomauttaa jos jollakin kissalla/kissoilla on seuraavaan rokotukseen alle 2 kk aikaa.
+     */
+    public void onkoRokotettava() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate nyt = LocalDate.now();
+        LocalDate raja = nyt.plusMonths(2);
+        Huomautukset.setFont(new Font("Courier New", 12));
+        
+        StringBuilder huom = new StringBuilder();
+       
+       List<Kissa> kissat = rekisteri.getKissat().getKissatAlkiot();
+       
+       for (Kissa k: kissat) {
+           if(k.getSeuraavaRokotus() != null && !k.getSeuraavaRokotus().isEmpty()) {
+               System.out.println(k.getSeuraavaRokotus());
+           LocalDate rokotus = LocalDate.parse(k.getSeuraavaRokotus(), formatter);
+           if(rokotus.isBefore(raja)) {
+             huom.append("Kissalla " + k.getNimi() + " uusittava rokotus viimeistään " 
+           + rokotus.format(formatter) + System.lineSeparator());
+           }
+          }
+       }
+       Huomautukset.setText(nyt.format(formatter) +" Huomautukset:" + System.lineSeparator() +System.lineSeparator() + huom.toString());       
+    }
+
     
     /**
      * Alustaa kasvattajarekisterin lukemalla sen valitun nimisestä tiedostosta
@@ -170,6 +224,7 @@ public class RotukissakasvattajaGUIController implements Initializable {
         try {
             rekisteri.lueTiedostosta(nimi);
             haeKissa(0);
+            onkoRokotettava();
             return null;
         } catch (SailoException e) {
             haeKissa(0);
@@ -235,22 +290,17 @@ public class RotukissakasvattajaGUIController implements Initializable {
     }
     
     /**
-     * Näyttää listasta valitun kissan tiedot, tilapäisesti yhteen isoon edit-kenttään
+     * Näyttää listasta valitun kissan tiedot tekstikenttiin.
      */
     protected void naytaKissa() {
         kissaKohdalla = chooserKissat.getSelectedObject();
 
-        if (kissaKohdalla == null) {
-            areaKissa.clear();
-            return;
-        }
-
-        areaKissa.setText("");
-        try (PrintStream os = TextAreaOutputStream.getTextPrintStream(areaKissa)) {
-          
-            tulosta(os, kissaKohdalla);
-        }
+        if (kissaKohdalla == null) return;
+        
+        TietueDialogController.naytaTietue(edits, kissaKohdalla); 
+        naytaOmistajat(kissaKohdalla);
     }
+    
     
     /**
      * Hakee kissojen tiedot listaan
@@ -258,12 +308,16 @@ public class RotukissakasvattajaGUIController implements Initializable {
      */
     protected void haeKissa(int kissanro) {
 
-        int k = cbKentat.getSelectionModel().getSelectedIndex();
+        int kissanumero = kissanro; // kissanumero kissan numero, joka aktivoidaan haun jälkeen 
+        if ( kissanumero <= 0 ) { 
+            Kissa kohdalla = kissaKohdalla; 
+            if ( kohdalla != null ) kissanumero = kohdalla.getKissanTunnusNro(); 
+        }
+        
+        int k = cbKentat.getSelectionModel().getSelectedIndex() + apukissa.ekaKentta();
         String ehto = hakuehto.getText(); 
-        if (k > 0 || ehto.length() > 0)
-            naytaVirhe(String.format("Ei osata hakea (kenttä: %d, ehto: %s)", k, ehto));
-        else
-            naytaVirhe("");
+
+        if (ehto.indexOf('*') < 0) ehto = "*" + ehto + "*"; 
         
         chooserKissat.clear();
 
@@ -280,42 +334,124 @@ public class RotukissakasvattajaGUIController implements Initializable {
         } catch (SailoException ex) {
             Dialogs.showMessageDialog("Kissan hakemisessa ongelmia! " + ex.getMessage());
         }
-        chooserKissat.setSelectedIndex(index); // tästä tulee muutosviesti joka näyttää kissan
+        chooserKissat.setSelectedIndex(index); 
     }
+    
     
     /**
      * Luo uuden kissan jota aletaan editoimaan 
      */
     protected void uusiKissa() {
-        Kissa uusi = new Kissa();
-        uusi.rekisteroi();
-        uusi.taytaKissaTiedoilla();
         try {
-            rekisteri.lisaa(uusi);
-        } catch (Exception e) { 
+        Kissa uusi = new Kissa();
+        uusi = TietueDialogController.kysyTietue(null, uusi, 1);
+        if ( uusi == null ) return;
+        uusi.rekisteroi();
+        rekisteri.lisaa(uusi);
+        haeKissa(uusi.getKissanTunnusNro());
+        } catch (SailoException e) { 
             Dialogs.showMessageDialog("Ongelmia uuden kissan luomisessa " + e.getMessage());
             return;
         }
-        haeKissa(uusi.getKissanTunnusNro());
+        
     }
     
-    /** 
-     * Lisätään omistaja jo valmiina olevalla kissalle
-     * (tekee uuden tyhjän omistajan editointia varten). 
-     */ 
-    protected void uusiOmistaja() { 
-        if ( kissaKohdalla == null ) return;  
-        Omistaja omistaja = new Omistaja();  
-        omistaja.rekisteroi();  
-        omistaja.taytaKissanOmistaja(kissaKohdalla.getKissanTunnusNro());  
+    
+    private void naytaOmistajat(Kissa kissa) {
+        stringGridOmistaja.clear();
+        if ( kissa == null ) return;
+        
         try {
-        rekisteri.lisaa(omistaja); 
-        } catch (SailoException e) {
-            Dialogs.showMessageDialog("Ongelmia uuden omistajan luomisessa " + e.getMessage());
-            return;
+            List<Omistaja> omistajat = rekisteri.annaOmistajat(kissa);
+            if ( omistajat.size() == 0 ) return;
+            for (Omistaja omi: omistajat)
+                naytaOmistaja(omi);
+        } catch (SailoException e) { 
+             naytaVirhe(e.getMessage());
+        } 
+    }
+
+    
+    private void naytaOmistaja(Omistaja omi) {
+        int kenttia = omi.getKenttia(); 
+        String[] rivi = new String[kenttia-omi.ekaKentta()]; 
+        for (int i=0, k=omi.ekaKentta(); k < kenttia; i++, k++) 
+            rivi[i] = omi.anna(k); 
+        stringGridOmistaja.add(omi,rivi);
+    }
+    
+ 
+    /**
+     * Tekee uuden tyhjän omistajan editointia varten. Jos käytetään jo olemassaolevaa omistajaa, riittää kirjoittaa 
+     * omistajan nimi ja sitten tallennetaan. Sen jälkeen ohjelma hakee loput tiedot ja ne tulevat näkyviin 
+     * omistajan tietoihin.
+     */
+    private void uusiOmistaja(){
+        if ( kissaKohdalla == null ) return;
+        try {
+            Omistaja uusi = new Omistaja(); 
+            uusi = TietueDialogController.kysyTietue(null, uusi, 0);
+            if ( uusi == null ) return;
+            boolean onkoOmistajaOlemassa = false;
+            int omistajatLkm = rekisteri.getOmistajat().getLkm();
+            Omistaja[] omistajat = rekisteri.getOmistajat().getOmistajaAlkiot();
+            for (int i = 0; i < omistajatLkm; i++) {
+                if (omistajat[i].getNimi().equals(uusi.getNimi())){
+                    onkoOmistajaOlemassa = true;
+                    uusi = omistajat[i];
+                    break;
+                }
+            }
+            if(!onkoOmistajaOlemassa) {
+                uusi.rekisteroi();
+                rekisteri.lisaa(uusi);
+            }
+
+            rekisteri.annaKissat(uusi);
+            kissaKohdalla.setOmistajanTunnusNro(uusi.getOmistajanTunnusNro());
+            rekisteri.korvaaTaiLisaa(kissaKohdalla);
+            naytaOmistajat(kissaKohdalla); 
+            stringGridOmistaja.selectRow(1000);  // järjestetään viimeinen rivi valituksi
+        } catch (SailoException e) { 
+            Dialogs.showMessageDialog("Lisääminen epäonnistui: " + e.getMessage());
         }
-        haeKissa(kissaKohdalla.getKissanTunnusNro());          
-    } 
+    }
+    
+    
+
+    private void muokkaaOmistaja() {
+        int r = stringGridOmistaja.getRowNr();
+        if ( r < 0 ) return; 
+        Omistaja har = stringGridOmistaja.getObject();
+        if ( har == null ) return;
+        int k = stringGridOmistaja.getColumnNr()+har.ekaKentta();
+        try {
+            har = TietueDialogController.kysyTietue(null, har.clone(), k);
+            if ( har == null ) return;
+            rekisteri.korvaaTaiLisaa(har); 
+            naytaOmistajat(kissaKohdalla); 
+            stringGridOmistaja.selectRow(r);  // järjestetään sama rivi takaisin valituksi
+        } catch (CloneNotSupportedException  e) { /* clone on tehty */  
+        } catch (SailoException e) {
+            Dialogs.showMessageDialog("Ongelmia lisäämisessä: " + e.getMessage());
+        }
+    }
+
+      
+    private void muokkaaKissa(int k) { 
+        if ( kissaKohdalla == null ) return; 
+        try { 
+            Kissa kissa; 
+            kissa = TietueDialogController.kysyTietue(null, kissaKohdalla.clone(), k);   
+            if ( kissa == null ) return; 
+            rekisteri.korvaaTaiLisaa(kissa); 
+            haeKissa(kissa.getKissanTunnusNro()); 
+        } catch (CloneNotSupportedException e) { 
+            // 
+        } catch (SailoException e) { 
+            Dialogs.showMessageDialog(e.getMessage()); 
+        } 
+    }   
     
     
     /**
@@ -326,29 +462,41 @@ public class RotukissakasvattajaGUIController implements Initializable {
         naytaKissa();
     }
     
-   
+    
     /**
-     * Tulostaa listassa olevat kissat tekstialueeseen
-     * @param text alue johon tulostetaan
+     * Poistetaan omistajataulukosta valitulla kohdalla oleva omistaja. 
      */
-    public void tulostaValitut(TextArea text) {
-        try (PrintStream os = TextAreaOutputStream.getTextPrintStream(text)) {
-            os.println("Tulostetaan kaikki kissat");
-            
-            
-            
-            Collection<Kissa> kissat = rekisteri.etsiKissat("", -1); 
-            for (Kissa kissa:kissat) { 
-                tulosta(os, kissa);
-                os.println("\n\n");
-            }
-        } catch (SailoException ex) { 
-            Dialogs.showMessageDialog("Kissan hakemisessa ongelmia! " + ex.getMessage()); 
-        }   
-
+    private void poistaOmistaja() {
+        int rivi = stringGridOmistaja.getRowNr();
+        if ( rivi < 0 ) return;
+        Omistaja omistaja = stringGridOmistaja.getObject();
+        if ( omistaja == null ) return;
+        if ( !Dialogs.showQuestionDialog("Poisto", "Poistetaanko omistaja: " + omistaja.getNimi(), "Kyllä", "Ei") )
+            return;
+        rekisteri.poista(omistaja);
+        naytaOmistajat(kissaKohdalla);
+        int omistajia = stringGridOmistaja.getItems().size(); 
+        if ( rivi >= omistajia ) rivi = omistajia -1;
+        stringGridOmistaja.getFocusModel().focus(rivi);
+        stringGridOmistaja.getSelectionModel().select(rivi);
     }
 
-  
+
+    /**
+     * Poistetaan listalta valittu kissa
+     */
+    private void poistaKissa() {
+        Kissa kissa = kissaKohdalla;
+        if ( kissa == null ) return;
+        if ( !Dialogs.showQuestionDialog("Poisto", "Poistetaanko kissa: " + kissa.getNimi(), "Kyllä", "Ei") )
+            return;
+        rekisteri.poista(kissa);
+        int index = chooserKissat.getSelectedIndex();
+        haeKissa(0);
+        chooserKissat.setSelectedIndex(index);
+    }
+    
+   
     
     /**
      * Tulostaa kissan tiedot
@@ -365,13 +513,30 @@ public class RotukissakasvattajaGUIController implements Initializable {
         for (Omistaja omistaja:omistajat)
             omistaja.tulosta(os);
  
-       } catch (Exception ex) {
+       } catch (SailoException ex) {
             Dialogs.showMessageDialog("Omistajan hakemisessa ongelmia! " + ex.getMessage());
         }      
  
   }
 
-   
+    /**
+     * Tulostaa listassa olevat kissat tekstialueeseen
+     * @param text alue johon tulostetaan
+     */
+    public void tulostaValitut(TextArea text) {
+        try (PrintStream os = TextAreaOutputStream.getTextPrintStream(text)) {
+            os.println("Tulostetaan kaikki kissat");
+               
+            
+            for (Kissa kissa: chooserKissat.getObjects()) { 
+                tulosta(os, kissa);
+                os.println("\n\n");
+            }   
+            
+        }
+            
+    }
+
 }   
     
 

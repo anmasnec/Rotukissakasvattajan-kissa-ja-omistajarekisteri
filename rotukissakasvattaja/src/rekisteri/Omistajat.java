@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+
 /**
  * Omistajat, joka osaa mm. lisätä uuden omistajan.
  * Vastuualueet:
@@ -22,7 +23,7 @@ import java.util.NoSuchElementException;
  * - Etsii ja lajittelee 
  * Avustajaluokka: Omistaja
  * @author annik
- * @version 24.3.2020
+ * @version 7.4.2020
  * 
  *
  */                    
@@ -35,14 +36,18 @@ public class Omistajat implements Iterable <Omistaja> {
     private Omistaja omistajaAlkiot[] = new Omistaja[MAX_OMISTAJIA];
     private String kasvattajaNimi = "";
 
-    /** Lista omistajista */
-  private Collection<Omistaja> alkiotOmistajat = new ArrayList<Omistaja>();
 
     /**
      * Oletusmuodostaja: Omistajien alustaminen
      */
     public Omistajat() {
-        // toistaiseksi ei mitään
+    }
+    
+    /**
+     * @return omistajat
+     */
+    public Omistaja[] getOmistajaAlkiot() {
+        return omistajaAlkiot;
     }
 
 
@@ -76,13 +81,52 @@ public class Omistajat implements Iterable <Omistaja> {
      */
     public void lisaa(Omistaja omistaja){
         if (lkm >= omistajaAlkiot.length) omistajaAlkiot = 
-            
             Arrays.copyOf(omistajaAlkiot, lkm +10);
         omistajaAlkiot[lkm] = omistaja;
         lkm++;
         muutettu = true;
     }
 
+    
+    /**
+     * Korvaa omistajan tietorakenteessa.  Ottaa omistajan omistukseensa.
+     * Etsitään samalla tunnusnumerolla oleva omistaja.  Jos ei löydy,
+     * niin lisätään uutena omistajana.
+     * @param omistaja lisättävän omistajan viite.  Huom tietorakenne muuttuu omistajaksi
+     * @throws SailoException jos tietorakenne on jo täynnä
+     * <pre name="test">
+     * #THROWS SailoException,CloneNotSupportedException
+     * #PACKAGEIMPORT
+     * Omistajat omistajat = new Omistajat();
+     * Omistaja sadepilvinen1 = new Omistaja(), sadepilvinen2 = new Omistaja();
+     * sadepilvinen1.rekisteroi(); sadepilvinen2.rekisteroi();
+     * omistajat.getLkm() === 0;
+     * omistajat.korvaaTaiLisaa(sadepilvinen1); omistajat.getLkm() === 1;
+     * omistajat.korvaaTaiLisaa(sadepilvinen2); omistajat.getLkm() === 2;
+     * Omistaja sadepilvinen3 = sadepilvinen1.clone();
+     * sadepilvinen3.aseta(3,"kkk");
+     * Iterator<Omistaja> it = omistajat.iterator();
+     * it.next() == sadepilvinen1 === true;
+     * omistajat.korvaaTaiLisaa(sadepilvinen3); omistajat.getLkm() === 2;
+     * it = omistajat.iterator();
+     * Omistaja o0 = it.next();
+     * o0 === sadepilvinen3;
+     * o0 == sadepilvinen3 === true;
+     * o0 == sadepilvinen1 === false;
+     * </pre>
+     */
+    public void korvaaTaiLisaa(Omistaja omistaja) throws SailoException {
+        int id = omistaja.getOmistajanTunnusNro();
+        for (int i = 0; i < lkm; i++) {
+            if ( omistajaAlkiot[i].getOmistajanTunnusNro() == id ) {
+                omistajaAlkiot[i] = omistaja;
+                muutettu = true;
+                return;
+            }
+        }
+        lisaa(omistaja);
+    }
+    
     
     /**
      * Palauttaa viitteen i:teen omistajaan.
@@ -97,8 +141,37 @@ public class Omistajat implements Iterable <Omistaja> {
     }
 
 
+    /** 
+     * Poistaa omistajan jolla on valittu tunnusnumero  
+     * @param id poistettavan omistajan tunnusnumero 
+     * @return 1 jos poistettiin, 0 jos ei löydy 
+     * @example 
+     * <pre name="test"> 
+     * #THROWS SailoException  
+     * Omistajat omistajat = new Omistajat();
+     * Omistaja sadepilvinen1 = new Omistaja(), sadepilvinen2 = new Omistaja(), sadepilvinen3 = new Omistaja(); 
+     * sadepilvinen1.rekisteroi(); sadepilvinen2.rekisteroi(); sadepilvinen3.rekisteroi(); 
+     * int id1 = sadepilvinen1.getOmistajanTunnusNro(); 
+     * omistajat.lisaa(sadepilvinen1); omistajat.lisaa(sadepilvinen2); omistajat.lisaa(sadepilvinen3); 
+     * omistajat.poista(id1+1) === 1; 
+     * omistajat.annaId(id1+1) === null; omistajat.getLkm() === 2; 
+     * omistajat.poista(id1) === 1; omistajat.getLkm() === 1; 
+     * omistajat.poista(id1+3) === 0; omistajat.getLkm() === 1; 
+     * </pre> 
+     *  
+     */ 
+    public int poista(int id) { 
+        int ind = etsiId(id); 
+        if (ind < 0) return 0; 
+        lkm--; 
+        for (int i = ind; i < lkm; i++) 
+            omistajaAlkiot[i] = omistajaAlkiot[i + 1]; 
+        omistajaAlkiot[lkm] = null; 
+        muutettu = true; 
+        return 1; 
+    } 
     
-    
+  
     /**
      * Lukee omistajat tiedostosta. 
      * @param tied tiedoston perusnimi
@@ -111,8 +184,8 @@ public class Omistajat implements Iterable <Omistaja> {
      * 
      *  Omistajat omistajat = new Omistajat();
      *  Omistaja sadepilvinen1 = new Omistaja(), sadepilvinen2 = new Omistaja();
-     *  sadepilvinen1.taytaKissanOmistaja(1);
-     *  sadepilvinen2.taytaKissanOmistaja(2);
+     *  sadepilvinen1.taytaKissanOmistaja();
+     *  sadepilvinen2.taytaKissanOmistaja();
      *  String hakemisto = "testiKissakaveri";
      *  String tiedNimi = hakemisto+"/omistajat";
      *  File ftied = new File(tiedNimi+".dat");
@@ -134,16 +207,14 @@ public class Omistajat implements Iterable <Omistaja> {
      *  ftied.delete() === true;
      *  File fbak = new File(tiedNimi+".bak");
      *  fbak.delete() === true;
+     *  dir.delete() === true;
      * </pre>
      */
     public void lueTiedostosta(String tied) throws SailoException {
         setTiedostonPerusNimi(tied);
         try ( BufferedReader fi = new BufferedReader(new FileReader(getTiedostonNimi())) ) {
-//            kasvattajaNimi = fi.readLine();
-//            if ( kasvattajaNimi == null ) throw new SailoException("Kasvattajanimi puuttuu");
             String rivi = "";
-           // if ( rivi == null ) throw new SailoException("Maksimikoko puuttuu");
-            // int maxKoko = Mjonot.erotaInt(rivi,10); // tehdään jotakin
+
 
             while ( (rivi = fi.readLine()) != null ) {
                 rivi = rivi.trim();
@@ -184,12 +255,11 @@ public class Omistajat implements Iterable <Omistaja> {
 
         File fbak = new File(getBakNimi());
         File ftied = new File(getTiedostonNimi());
-        fbak.delete(); // if .. System.err.println("Ei voi tuhota");
-        ftied.renameTo(fbak); // if .. System.err.println("Ei voi nimetä");
+        fbak.delete(); 
+        ftied.renameTo(fbak); 
 
         try ( PrintWriter fo = new PrintWriter(new FileWriter(new File(getTiedostonNimi()).getCanonicalPath())) ) {
-//            fo.println(getKasvattajaNimi());
-            //fo.println(omistajaAlkiot.length);
+
             Collection<Omistaja> kaikkiOmistajat = new ArrayList<Omistaja>();
             for(int i=0;i<lkm;i++) {
                 kaikkiOmistajat.add(omistajaAlkiot[i]);
@@ -197,8 +267,7 @@ public class Omistajat implements Iterable <Omistaja> {
             for (Omistaja omistaja : kaikkiOmistajat) {
                 fo.println(omistaja.toString());
             }
-            //} catch ( IOException e ) { // ei heitä poikkeusta
-            //  throw new SailoException("Tallettamisessa ongelmia: " + e.getMessage());
+
         } catch ( FileNotFoundException ex ) {
             throw new SailoException("Tiedosto " + ftied.getName() + " ei aukea");
         } catch ( IOException ex ) {
@@ -358,7 +427,7 @@ public class Omistajat implements Iterable <Omistaja> {
 
 
     /**
-     * Haetaan kaikki kissan omistajat
+     * Haetaan kaikki omistajat
      * @param omistajaId omistajan tunnusnumero
      * @return tietorakenne jossa viiteet löydettyihin omistajiin
      */
@@ -374,24 +443,51 @@ public class Omistajat implements Iterable <Omistaja> {
     }
     
 
-
+    
     /** 
-     * Palauttaa "taulukossa" hakuehtoon vastaavien omistajien viitteet 
-     * @param hakuehto hakuehto  
-     * @return tietorakenteen löytyneistä omistajista 
-     * @example 
+     * Etsii omistajan id:n perusteella 
+     * @param id tunnusnumero, jonka mukaan etsitään 
+     * @return omistaja jolla etsittävä id tai null 
      * <pre name="test"> 
      * #THROWS SailoException  
-     *   Omistajat omistajat = new Omistajat(); 
-     *   Omistaja omistaja1 = new Omistaja(); omistaja1.parse("1|Sade Pilvinen|Pilvitie 2 B 16|97612|Pilvelä|0601456387|05.06.1991||"); 
-     *   Omistaja omistaja2 = new Omistaja(); omistaja2.parse("2|Kukka Metsälä|Metsäpolku 8|26100|Metsäkylä|0608123445|16.11.1984|Toimii itsekin kasvattajana|"); 
-     *   Omistaja omistaja3 = new Omistaja(); omistaja3.parse("3|Kari Luminen|Tihkutie 50|02210|Räntälä|0605419846|04.12.1960||"); 
-     *   Omistaja omistaja4 = new Omistaja(); omistaja4.parse("4|Lilja Lehtinen|Lehtikatu 1 A 4|33541|Lehtelä|0701123774|12.03.1995||"); 
-     *   Omistaja omistaja5 = new Omistaja(); omistaja5.parse("5|Pena Kissala|Kattikuja 6|29190|Kissacity|0606287001|08.09.1973|Kokenut näyttelyissäkävijä|"); 
-     *   omistajat.lisaa(omistaja1); omistajat.lisaa(omistaja2); omistajat.lisaa(omistaja3); omistajat.lisaa(omistaja4); omistajat.lisaa(omistaja5);
+     * Omistajat omistajat = new Omistajat(); 
+     * Omistaja sadepilvinen1 = new Omistaja(), sadepilvinen2 = new Omistaja(), sadepilvinen3 = new Omistaja(); 
+     * sadepilvinen1.rekisteroi(); sadepilvinen2.rekisteroi(); sadepilvinen3.rekisteroi(); 
+     * int id1 = sadepilvinen1.getOmistajanTunnusNro();  
+     * omistajat.lisaa(sadepilvinen1); omistajat.lisaa(sadepilvinen2); omistajat.lisaa(sadepilvinen3); 
+     * omistajat.annaId(id1  ) == sadepilvinen1 === true; 
+     * omistajat.annaId(id1+1) == sadepilvinen2 === true; 
+     * omistajat.annaId(id1+2) == sadepilvinen3 === true; 
      * </pre> 
-     */
-
+     */ 
+    public Omistaja annaId(int id) { 
+        for (Omistaja omistaja : this) { 
+            if (id == omistaja.getOmistajanTunnusNro()) return omistaja; 
+        } 
+        return null; 
+    } 
+//
+//
+    /** 
+     * Etsii omistajan id:n perusteella 
+     * @param id tunnusnumero, jonka mukaan etsitään 
+     * @return löytyneen omistajan indeksi tai -1 jos ei löydy 
+     * <pre name="test"> 
+     * #THROWS SailoException  
+     * Omistajat omistajat = new Omistajat(); 
+     * Omistaja sadepilvinen1 = new Omistaja(), sadepilvinen2 = new Omistaja(), sadepilvinen3 = new Omistaja(); 
+     * sadepilvinen1.rekisteroi(); sadepilvinen2.rekisteroi(); sadepilvinen3.rekisteroi(); 
+     * int id1 = sadepilvinen1.getOmistajanTunnusNro(); 
+     * omistajat.lisaa(sadepilvinen1); omistajat.lisaa(sadepilvinen2); omistajat.lisaa(sadepilvinen3); 
+     * omistajat.etsiId(id1+1) === 1; 
+     * omistajat.etsiId(id1+2) === 2; 
+     * </pre> 
+     */ 
+    public int etsiId(int id) { 
+        for (int i = 0; i < lkm; i++) 
+            if (id == omistajaAlkiot[i].getOmistajanTunnusNro()) return i; 
+        return -1; 
+    }  
     
 
     /**
@@ -402,13 +498,13 @@ public class Omistajat implements Iterable <Omistaja> {
         Omistajat kissanomistajat = new Omistajat();
         Omistaja sadepilvinen1 = new Omistaja();
         sadepilvinen1.rekisteroi();
-        sadepilvinen1.taytaKissanOmistaja(2);
+        sadepilvinen1.taytaKissanOmistaja(); 
         Omistaja sadepilvinen2 = new Omistaja();
         sadepilvinen2.rekisteroi();
-        sadepilvinen2.taytaKissanOmistaja(1);
+        sadepilvinen2.taytaKissanOmistaja(); 
         Omistaja sadepilvinen3 = new Omistaja();
         sadepilvinen3.rekisteroi();
-        sadepilvinen3.taytaKissanOmistaja(3);
+        sadepilvinen3.taytaKissanOmistaja(); 
 
          
 
@@ -420,8 +516,6 @@ public class Omistajat implements Iterable <Omistaja> {
         System.out.println("============= Omistajat testi =================");
 
 
-
-      
         for (int i = 0; i < kissanomistajat.getLkm(); i++) {
             Omistaja omistaja = kissanomistajat.annaOmistaja(i);
          
@@ -429,7 +523,6 @@ public class Omistajat implements Iterable <Omistaja> {
            
         }
     
-
     }
   }
 

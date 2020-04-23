@@ -1,16 +1,17 @@
 package fxRotukissakasvattaja;
 
-import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ModalController;
 import fi.jyu.mit.fxgui.ModalControllerInterface;
 import javafx.fxml.FXML;
+import javafx.print.PrinterJob;
 import javafx.scene.control.TextArea;
+import javafx.scene.web.WebEngine;
 
 /**
 * Tulostuksen hoitava luokka
 * 
 * @author annik
-* @version 11.3.2020
+* @version 20.4.2020
 */
 
 public class RotukissaTulostusController implements ModalControllerInterface<String>{
@@ -23,7 +24,13 @@ public class RotukissaTulostusController implements ModalControllerInterface<Str
 
     
     @FXML private void handleTulosta() {
-        Dialogs.showMessageDialog("Tulostus ei ole vielä mahdollista.");
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if ( job != null && job.showPrintDialog(null) ) {
+            WebEngine webEngine = new WebEngine();
+            webEngine.loadContent("<pre>" + tulostusAlue.getText() + "</pre>");
+            webEngine.print(job);
+            job.endJob();
+        }
     }
 
     

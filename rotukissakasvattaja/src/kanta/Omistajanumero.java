@@ -1,9 +1,10 @@
-package rekisteri;
+package kanta;
+
 
 /**
  * Luokka omistajanumeron arpomiseksi
  * @author annik
- * @version 16.3.2020
+ * @version 12.4.2020
  *
  */
 public class Omistajanumero {
