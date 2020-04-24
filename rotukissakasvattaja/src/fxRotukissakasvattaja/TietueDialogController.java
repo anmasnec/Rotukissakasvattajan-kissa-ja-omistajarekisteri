@@ -37,6 +37,9 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
        // alusta();  
     }
     
+    /**
+     * Hyväksytään dialogiin syötetyt tiedot
+     */
     @FXML private void handleOK() {
         if ( tietueKohdalla != null && tietueKohdalla.anna(tietueKohdalla.ekaKentta()).trim().equals("") ) {
             naytaVirhe("Ei saa olla tyhjä");
@@ -46,6 +49,9 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
     }
 
     
+    /**
+     * Perutaan dialogiin syötetyt tiedot 
+     */
     @FXML private void handleCancel() {
         tietueKohdalla = null;
         ModalController.closeStage(labelVirhe);
@@ -106,6 +112,9 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
     }
     
     
+    /**
+     * Käsitellään dialogia
+     */
     @Override
     public void setDefault(TYPE oletus) {
         tietueKohdalla = oletus;
@@ -114,12 +123,18 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
     }
 
     
+    /**
+     * Käsitellään dialogia
+     */
     @Override
     public TYPE getResult() {
         return tietueKohdalla;
     }
     
     
+    /**
+     * Käsitellään dialogin kenttää
+     */
     private void setKentta(int kentta) {
         this.kentta = kentta;
     }
@@ -135,6 +150,9 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
     }
     
     
+    /**
+     * Näytetään virheilmoitus ongelmatapauksessa
+     */
     private void naytaVirhe(String virhe) {
         if ( virhe == null || virhe.isEmpty() ) {
             labelVirhe.setText("");
@@ -147,7 +165,7 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
 
     
     /**
-     * Käsitellään teitueeseen tullut muutos
+     * Käsitellään tietueeseen tullut muutos
      * @param edit muuttunut kenttä
      */
     protected void kasitteleMuutosTietueeseen(TextField edit) {

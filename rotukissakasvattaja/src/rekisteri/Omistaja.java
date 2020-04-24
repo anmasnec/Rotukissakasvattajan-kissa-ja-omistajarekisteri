@@ -15,7 +15,7 @@ import static kanta.Syntymaaika.*;
  * - Osaa antaa merkkijonona i:n kentän tiedoiksi
  * - Osaa laittaa merkkijonon i:neksi kentäksi
  * @author annik
- * @version 20.4.2020
+ * @version 24.4.2020
  * 
  */
 public class Omistaja implements Cloneable, Tietue {
@@ -403,6 +403,10 @@ public class Omistaja implements Cloneable, Tietue {
         return true;
     }
     
+    
+    /**
+     * Tutkii onko tiedot samat kuin parametrina tuodut tiedot
+     */
     @Override
     public boolean equals(Object omistaja) {
           if ( omistaja instanceof Omistaja ) return equals((Omistaja)omistaja);
@@ -410,6 +414,9 @@ public class Omistaja implements Cloneable, Tietue {
     }
 
 
+    /**
+     * Equals-metodin tunnusluku vertailuun
+     */
     @Override
     public int hashCode() {
         return omistajantunnusNro;

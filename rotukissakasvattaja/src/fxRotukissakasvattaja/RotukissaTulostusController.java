@@ -11,18 +11,24 @@ import javafx.scene.web.WebEngine;
 * Tulostuksen hoitava luokka
 * 
 * @author annik
-* @version 20.4.2020
+* @version 24.4.2020
 */
 
 public class RotukissaTulostusController implements ModalControllerInterface<String>{
     
  @FXML TextArea tulostusAlue;
     
+     /**
+      * Sulkee tulostuksen
+      */
     @FXML private void handleOK() {
         ModalController.closeStage(tulostusAlue);
     }
 
     
+    /**
+     * Avaa tulostusikkunan
+     */
     @FXML private void handleTulosta() {
         PrinterJob job = PrinterJob.createPrinterJob();
         if ( job != null && job.showPrintDialog(null) ) {
@@ -34,12 +40,18 @@ public class RotukissaTulostusController implements ModalControllerInterface<Str
     }
 
     
+    /**
+     * Käsittelee tulostettavat 
+     */
     @Override
     public String getResult() {
         return null;
     } 
 
     
+    /**
+     * Käsittelee tulostettavat 
+     */
     @Override
     public void setDefault(String oletus) {
         if ( oletus == null ) return;

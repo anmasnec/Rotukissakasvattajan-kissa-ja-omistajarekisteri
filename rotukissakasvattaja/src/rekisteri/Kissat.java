@@ -20,7 +20,7 @@ import fi.jyu.mit.ohj2.WildChars;
 * - Etsii ja lajittelee
 * Avustajaluokka: Kissa
  * @author annik
- * @version 20.4.2020
+ * @version 24.4.2020
  * 
  */
 public class Kissat implements Iterable <Kissa> {

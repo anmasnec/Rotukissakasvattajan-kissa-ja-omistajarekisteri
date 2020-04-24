@@ -19,6 +19,7 @@ public class Rekisteri {
     private Kissat kissat = new Kissat();
     private Omistajat omistajat = new Omistajat();
     
+    
     /** Hakee kaikki kissat
      * @return Kaikki kissat
      */

@@ -18,7 +18,7 @@ import kanta.Tietue;
  * - Osaa laittaa merkkijonon i:neksi kentäksi      
  * - Osaa ilmoittaa kissasta, jonka seuraava rokotus on pian ajankohtainen  
  * @author annik
- * @version 22.4.2020
+ * @version 24.4.2020
  * 
  */
 public class Kissa implements Cloneable, Tietue {
@@ -449,9 +449,9 @@ public String getKysymys(int k) {
      * @return kissa tolppaeroteltuna merkkijonona 
      * @example
      * <pre name="test">
-     Kissa kissa = new Kissa();
-//     *   kissa.parse("   1  |  1  | Kissakaveri Sadepilvi");
-//     *   kissa.toString().startsWith("1|1|Kissakaveri Sadepilvi|") === true; // on enemmänkin kuin 3 kenttää, siksi loppu |
+     * Kissa kissa = new Kissa();
+     *   kissa.parse("   1  |  1  | Kissakaveri Sadepilvi");
+     *   kissa.toString().startsWith("1|1|Kissakaveri Sadepilvi|") === true; // on enemmänkin kuin 3 kenttää, siksi loppu |
      * </pre>  
      */
 
@@ -543,6 +543,9 @@ public String getKysymys(int k) {
     }
         
     
+    /**
+     * Tutkitaan onko tiedot samat kuin parametrina tuodut tiedot
+     */
     @Override
     public boolean equals(Object kissa) {
         if ( kissa instanceof Kissa ) return equals((Kissa)kissa);
@@ -550,6 +553,9 @@ public String getKysymys(int k) {
     }
 
 
+    /**
+     * Equals-metodin käyttämä tunnusluku vertailuun
+     */
     @Override
     public int hashCode() {
         return kissantunnusNro;

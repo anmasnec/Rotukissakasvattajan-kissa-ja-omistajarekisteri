@@ -11,7 +11,7 @@ import javafx.stage.Stage;
  * Käynnistetään ohjelma. Käyttäjä kirjautuu ohjelmaan syöttämällä kasvattajanimensä.
  * 
  * @author annik
- * @version 12.02.2020
+ * @version 24.04.2020
  */
 
 public class KaynnistysController implements ModalControllerInterface<String> {
@@ -20,23 +20,34 @@ public class KaynnistysController implements ModalControllerInterface<String> {
     private String vastaus = null;
 
     
+    /**
+     * Avataan rekisteri, kun syötetty alkunäytössä kasvattajanimi
+     */
     @FXML private void handleOK() {
         vastaus = textKasvattajanimi.getText();
         ModalController.closeStage(textKasvattajanimi);
     }
 
     
+    /**
+     * Alkunäytössä poistutaan ohjelmasta
+     */
     @FXML private void handleCancel() {
         ModalController.closeStage(textKasvattajanimi);
     }
 
 
+    /**
+     * Käsittelee annetun kasvattajanimen
+     */
     @Override
     public String getResult() {
         return vastaus;
     }
 
-    
+    /**
+     * Käsittelee annetun kasvattajanimen
+     */
     @Override
     public void setDefault(String oletus) {
         textKasvattajanimi.setText(oletus);

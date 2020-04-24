@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
  * - Etsii ja lajittelee 
  * Avustajaluokka: Omistaja
  * @author annik
- * @version 7.4.2020
+ * @version 24.4.2020
  * 
  *
  */                    

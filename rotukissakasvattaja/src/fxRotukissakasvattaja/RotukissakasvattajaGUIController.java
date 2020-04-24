@@ -39,7 +39,7 @@ import rekisteri.SailoException;
 /**
  * Luokka Käyttöliittymän käsittelyyn rotukissakasvattajan ohjelmalle.
  * @author annik
- * @version 22.4.2020
+ * @version 24.4.2020
  *
  */
 public class RotukissakasvattajaGUIController implements Initializable {
@@ -57,66 +57,105 @@ public class RotukissakasvattajaGUIController implements Initializable {
     
 
     
-    
+    /**
+     * alustaa rekisterin
+     */
     @Override
     public void initialize(URL url, ResourceBundle bundle) {
         alusta();    
     }
 
     
+    /**
+     * Hakee kissan
+     */
     @FXML private void handleHakuehto() {
         haeKissa(0);
     }
+   
     
-    
+    /**
+     * Tallentaa muutokset
+     */
     @FXML private void handleTallenna() {
         tallenna();
     }
     
+    
+    /**
+     * Avaa rekisterin tietyllä kasvattajanimellä
+     */
     @FXML private void handleAvaa() {
         avaa();
     }
     
     
+    /**
+     * Tulostaa. Tulostusalueeseen tulee kaikki, voidaan muokata tulostusaluetta poistamalla tarpeettomat
+     */
     @FXML private void handleTulosta() {
         RotukissaTulostusController tulostusCtrl = RotukissaTulostusController.tulosta(null);
         tulostaValitut(tulostusCtrl.getTextArea());
     } 
 
     
+    /**
+     * Poistuu ohjelmasta
+     */
     @FXML private void handleLopeta() {
        // tallenna();
         Platform.exit();
     } 
 
     
+    /**
+     * Lisää kissan
+     */
     @FXML private void handleLisaaUusiKissa() {
         uusiKissa();
     }
     
+    
+    /**
+     * Lisää omistajan kissalle
+     */
     @FXML private void handleLisaaUusiOmistaja() {
         uusiOmistaja();
     }
   
-    
+    /**
+     * Muokkaa valittua kissaa
+     */
     @FXML private void handleMuokkaaKissaa() {
         muokkaaKissa(kentta);
     }
     
+    /**
+     * Muokkaa valittua omistajaa
+     */
     @FXML private void handleMuokkaaOmistajaa() {
         muokkaaOmistaja();
     }
-      
-
+     
+    
+    /**
+     * Poistaa valitun kissan
+     */
     @FXML private void handlePoistaKissa() {
         poistaKissa();
     }
     
+    /**
+     * Poistaa valitun omistajan
+     */
     @FXML private void handlePoistaOmistaja() {
         poistaOmistaja();
     }
     
 
+    /**
+     * Avaa ohjelman suunnittelu- ja käyttöohjesivuston TIM-oppimisympäristöstä
+     */
     @FXML private void handleApua() {
         avustus();
     }
@@ -167,6 +206,9 @@ public class RotukissakasvattajaGUIController implements Initializable {
             }     
     }
     
+    /**
+     * Toiminnon epäonnistuessa näyttää virheen
+     */
     private void naytaVirhe(String virhe) {
         if ( virhe == null || virhe.isEmpty() ) {
             labelVirhe = new Label();
@@ -179,6 +221,9 @@ public class RotukissakasvattajaGUIController implements Initializable {
     }
     
     
+    /**
+     * Hakee tiedoston nimen kun luetaan tiedosto
+     */
     private void setTitle(String title) {
         ModalController.getStage(hakuehto).setTitle(title);
     }
@@ -357,6 +402,9 @@ public class RotukissakasvattajaGUIController implements Initializable {
     }
     
     
+    /**
+     * Hakee omistajat listaan
+     */
     private void naytaOmistajat(Kissa kissa) {
         stringGridOmistaja.clear();
         if ( kissa == null ) return;
@@ -372,6 +420,9 @@ public class RotukissakasvattajaGUIController implements Initializable {
     }
 
     
+    /**
+     * Hakee yksittäisen omistajan
+     */
     private void naytaOmistaja(Omistaja omi) {
         int kenttia = omi.getKenttia(); 
         String[] rivi = new String[kenttia-omi.ekaKentta()]; 
@@ -418,7 +469,9 @@ public class RotukissakasvattajaGUIController implements Initializable {
     }
     
     
-
+    /**
+     * Muokataan valittua omistajaa
+     */
     private void muokkaaOmistaja() {
         int r = stringGridOmistaja.getRowNr();
         if ( r < 0 ) return; 
@@ -437,7 +490,10 @@ public class RotukissakasvattajaGUIController implements Initializable {
         }
     }
 
-      
+    
+    /**
+     * Muokataan valittua kissaa
+     */
     private void muokkaaKissa(int k) { 
         if ( kissaKohdalla == null ) return; 
         try { 
