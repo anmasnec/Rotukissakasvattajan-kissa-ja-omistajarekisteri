@@ -1,8 +1,7 @@
 # Rotukissakasvattajan-kissa-ja-omistajarekisteri
 
-Ohjelman tarkoitus on rotukissakasvattajan avuksi ohjelma, johon syötetään kasvatetut kissat ja niiden tiedot, sekä kissojen ostajien eli omistajien tiedot. Tarkoituksena on helpottaa kissankasvattajan dokumentointia kasvattamistaan kissoista ja niiden omistajista eli kasvattajan asiakkaista.
-
-Kasvattaja kirjautuu kasvattajanimellään ohjelmaan sisään.
+Ohjelman tarkoituksena on luoda rotukissakasvattajan avuksi rekisteri, johon syötetään kasvatetut kissat ja niiden tiedot, sekä kissojen ostajien eli omistajien tiedot. Tarkoituksena on helpottaa kissankasvattajan dokumentointia kasvattamistaan kissoista ja niiden omistajista (kasvattajan asiakkaista).
+Kasvattaja kirjautuu kasvattajanimellään sisään.
 
 Rekisteriin voidaan syöttää seuraavat tiedot:
 
