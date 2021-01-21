@@ -7,28 +7,28 @@ Rekisteriin voidaan syöttää seuraavat tiedot:
 
 Kissat:
 
-- nimi
-- rotu
+- Nimi
+- Rotu
 - EMS-koodi
-- väri
-- rekisterinumero
-- sukupuoli
-- syntymäaika
-- kissan emon nimi ja rekisterinumero
-- kissan isän nimi ja rekisterinumero
-- omistaja
-- lisätietoja
+- Väri
+- Rekisterinumero
+- Sukupuoli
+- Syntymäaika
+- Kissan emon nimi ja rekisterinumero
+- Kissan isän nimi ja rekisterinumero
+- Omistaja
+- Lisätietoja
 
 Omistajat:
 
-- nimi
-- katuosoite
-- postinumero
-- paikkakunta
-- puhelinnumero
-- syntymäaika
-- kissan ostopvm
-- lisätietoja
+- Nimi
+- Katuosoite
+- Postinumero
+- Paikkakunta
+- Puhelinnumero
+- Syntymäaika
+- Kissan ostopvm
+- Lisätietoja
 
 Rekisterillä on seuraavat ominaisuudet:
 - Helpottaa kissankasvattajan dokumentointia kasvattamistaan kissoista ja niiden omistajista
